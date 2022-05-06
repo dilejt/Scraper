@@ -1,2 +1,4 @@
+from scrapers.investor.methods import synchronizeEstates
+
 def startInvestor():
-    print('Wykonuje akcje dla biura Kacpra')
+    synchronizeEstates()
