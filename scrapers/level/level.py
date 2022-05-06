@@ -1,2 +1,5 @@
+from scrapers.level.Initialize import LevelRealEstates
+
 def startLevel():
-    print('Wykonuje akcje dla biura Szymona')
+    LevelRealEstates.initGetLevelEstates()
+    print('*****KONIEC******')
