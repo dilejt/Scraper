@@ -1,6 +1,6 @@
 import csv
 import os
-from consts import NEW_ESTATES_CSV, OLD_ESTATES_CSV, HEADERS
+from consts import NEW_ESTATES_CSV, OLD_ESTATES_CSV, HEADERS, READ_MODE, NEWLINE, ENCODING, DELIMITER
 
 #  You have to specify absolute path the file
 def getArrayOfDictionariesFromCsv(path):
@@ -9,8 +9,8 @@ def getArrayOfDictionariesFromCsv(path):
         return []
 
     dictionaries = []
-    with open(path, 'r', newline='', encoding="utf-8") as file:
-        reader = csv.DictReader(file, fieldnames=HEADERS, delimiter=';')
+    with open(path, READ_MODE, newline=NEWLINE, encoding=ENCODING) as file:
+        reader = csv.DictReader(file, fieldnames=HEADERS, delimiter=DELIMITER)
         for row in reader:
             dictionaries.append(row)
 

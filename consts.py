@@ -11,6 +11,7 @@ DIRECTORY_TO_SAVE_CSV = 'data'
 
 ENCODING = "utf-8"
 NEWLINE = ''
+READ_MODE = 'r'
 WRITING_MODE = 'w'
 DELIMITER = ';'
 
