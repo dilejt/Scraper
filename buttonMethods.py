@@ -1,18 +1,20 @@
 from consts import OFFICE_PROPERTY
+from scrapers.future.future import startFuture
+from scrapers.american.american import startAmerican
+from scrapers.investor.investor import startInvestor
+from scrapers.level.level import startLevel
+from scrapers.landowscy.landowscy import startLandowscy
 
 
 def generateOnClickHandler(officeName):
     if officeName == OFFICE_PROPERTY['landowscy']:
-        print('Wykonuje akcje dla biura Mikołaja')
-
+        startLandowscy()
     if officeName == OFFICE_PROPERTY['future']:
-        print('Wykonuje akcje dla biura Damiana')
-
+        startFuture()
     if officeName == OFFICE_PROPERTY['level']:
-        print('Wykonuje akcje dla biura Szymona')
+        startLevel()
+    if officeName == OFFICE_PROPERTY['american']:
+        startAmerican()
 
     if officeName == OFFICE_PROPERTY['investor']:
-        print('Wykonuje akcje dla biura Łukasza')
-
-    if officeName == OFFICE_PROPERTY['american']:
-        print('Wykonuje akcje dla biura Kacpra')
+        startInvestor()
