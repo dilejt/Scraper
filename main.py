@@ -1,5 +1,7 @@
 from tkinter import *
 from tkinter.ttk import Treeview
+from consts import OFFICE_PROPERTY
+from buttonMethods import generateOnClickHandler
 
 
 class MainFrame:
@@ -24,7 +26,8 @@ class MainFrame:
 
         offers_filter_variable = StringVar(offers_filter_frame)
         offers_filter_variable.set("typ")
-        offers_option_menu = OptionMenu(offers_filter_frame, offers_filter_variable, "typ", "cena", "biuro", "lokalizacja", "powierzchnia")
+        offers_option_menu = OptionMenu(offers_filter_frame, offers_filter_variable, "typ", "cena", "biuro",
+                                        "lokalizacja", "powierzchnia")
         offers_option_menu.config(width=7)
         offers_option_menu.grid(column=1, row=0, sticky=N, padx=5, pady=5)
 
@@ -40,7 +43,8 @@ class MainFrame:
 
         updates_filter_variable = StringVar(updates_filter_frame)
         updates_filter_variable.set("typ")
-        updates_option_menu = OptionMenu(updates_filter_frame, updates_filter_variable, "typ", "cena", "biuro", "lokalizacja", "powierzchnia")
+        updates_option_menu = OptionMenu(updates_filter_frame, updates_filter_variable, "typ", "cena", "biuro",
+                                         "lokalizacja", "powierzchnia")
         updates_option_menu.config(width=7)
         updates_option_menu.grid(column=1, row=0, sticky=N, padx=5, pady=5)
 
@@ -103,12 +107,12 @@ class MainFrame:
         button_frame = Frame(self.root)
 
         variable = StringVar(button_frame)
-        variable.set("one")
-        option_menu = OptionMenu(button_frame, variable, "one", "two", "three")
+        variable.set(OFFICE_PROPERTY['landowscy'])
+        option_menu = OptionMenu(button_frame, variable, *OFFICE_PROPERTY.values())
         option_menu.config(width=7)
         option_menu.grid(column=0, row=0, sticky=N, padx=5, pady=5)
 
-        generate_btn = Button(button_frame, text="Generuj", width=10)
+        generate_btn = Button(button_frame, text="Generuj", width=10, command=lambda: generateOnClickHandler(variable.get()))
         generate_btn.grid(column=0, row=1, sticky=N, padx=5, pady=5)
 
         merge_btn = Button(button_frame, text="Łączenie", width=10)
@@ -118,7 +122,6 @@ class MainFrame:
         files_btn.grid(column=0, row=3, sticky=N, padx=5, pady=5)
 
         button_frame.grid(column=2, row=2, sticky=N, padx=5, pady=5)
-
 
 if __name__ == '__main__':
     MainFrame()
