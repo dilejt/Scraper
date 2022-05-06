@@ -4,6 +4,10 @@ from PIL import Image, ImageTk
 from io import BytesIO
 from ScrollbarFrame import ScrollbarFrame
 from functools import partial
+from tkinter.ttk import Treeview
+from consts import OFFICE_PROPERTY
+from buttonMethods import generateOnClickHandler
+
 
 class MainFrame:
     def __init__(self):
@@ -23,26 +27,39 @@ class MainFrame:
         # Begining of filter frame
         filter_frame = Frame(self.root)
 
-        files_btn = Button(filter_frame, text="Filtruj")
-        files_btn.grid(column=0, row=0, sticky=W, padx=5, pady=5)
+        offers_filter_input = Entry(offers_filter_frame, width=40)
+        offers_filter_input.grid(column=0, row=0, sticky=W, padx=5, pady=5)
 
-        office_name = Entry(filter_frame, width=40)
-        office_name.grid(column=1, row=0, sticky=W, padx=5, pady=5)
+        offers_filter_variable = StringVar(offers_filter_frame)
+        offers_filter_variable.set("typ")
+        offers_option_menu = OptionMenu(offers_filter_frame, offers_filter_variable, "typ", "cena", "biuro",
+                                        "lokalizacja", "powierzchnia")
+        offers_option_menu.config(width=7)
+        offers_option_menu.grid(column=1, row=0, sticky=N, padx=5, pady=5)
 
-        offer_type = Entry(filter_frame, width=40)
-        offer_type.grid(column=2, row=0, sticky=W, padx=5, pady=5)
+        offers_files_btn = Button(offers_filter_frame, text="Filtruj")
+        offers_files_btn.grid(column=2, row=0, sticky=W, padx=5, pady=5)
 
-        price = Entry(filter_frame, width=40)
-        price.grid(column=3, row=0, sticky=W, padx=5, pady=5)
+        offers_filter_frame.grid(column=0, row=1, sticky=W, padx=5, pady=5)
 
-        area = Entry(filter_frame, width=40)
-        area.grid(column=4, row=0, sticky=W, padx=5, pady=5)
+        updates_filter_frame = Frame(self.root)
 
-        location = Entry(filter_frame, width=40)
-        location.grid(column=5, row=0, sticky=W, padx=5, pady=5)
+        updates_filter_input = Entry(updates_filter_frame, width=40)
+        updates_filter_input.grid(column=0, row=0, sticky=W, padx=5, pady=5)
 
         filter_frame.grid(column=0, row=1, sticky=W, padx=5, pady=5)
         # End of filter frame
+        updates_filter_variable = StringVar(updates_filter_frame)
+        updates_filter_variable.set("typ")
+        updates_option_menu = OptionMenu(updates_filter_frame, updates_filter_variable, "typ", "cena", "biuro",
+                                         "lokalizacja", "powierzchnia")
+        updates_option_menu.config(width=7)
+        updates_option_menu.grid(column=1, row=0, sticky=N, padx=5, pady=5)
+
+        updates_files_btn = Button(updates_filter_frame, text="Filtruj")
+        updates_files_btn.grid(column=2, row=0, sticky=W, padx=5, pady=5)
+
+        updates_filter_frame.grid(column=1, row=1, sticky=W, padx=5, pady=5)
 
         # Begining of lists todo dodac jako 2 parametr zassane dane z global csv'ki
         offers_table = create_list(self.root, [])
@@ -55,20 +72,20 @@ class MainFrame:
         # Begining of button frame
         button_frame = Frame(self.root)
 
-        generate_btn = Button(button_frame, text="Generuj", width=10)
-        generate_btn.grid(column=0, row=0, sticky=N, padx=5, pady=5)
+        variable = StringVar(button_frame)
+        variable.set(OFFICE_PROPERTY['landowscy'])
+        option_menu = OptionMenu(button_frame, variable, *OFFICE_PROPERTY.values())
+        option_menu.config(width=7)
+        option_menu.grid(column=0, row=0, sticky=N, padx=5, pady=5)
+
+        generate_btn = Button(button_frame, text="Generuj", width=10, command=lambda: generateOnClickHandler(variable.get()))
+        generate_btn.grid(column=0, row=1, sticky=N, padx=5, pady=5)
 
         merge_btn = Button(button_frame, text="Łączenie", width=10)
-        merge_btn.grid(column=0, row=1, sticky=N, padx=5, pady=5)
+        merge_btn.grid(column=0, row=2, sticky=N, padx=5, pady=5)
 
         files_btn = Button(button_frame, text="Pliki...", width=10)
-        files_btn.grid(column=0, row=2, sticky=N, padx=5, pady=5)
-
-        variable = StringVar(button_frame)
-        variable.set("one")  # default value
-        option_menu = OptionMenu(button_frame, variable, "one", "two", "three")
-        option_menu.config(width=7)
-        option_menu.grid(column=0, row=3, sticky=N, padx=5, pady=5)
+        files_btn.grid(column=0, row=3, sticky=N, padx=5, pady=5)
 
         button_frame.grid(column=2, row=2, sticky=N, padx=5, pady=5)
         # End of button frame
