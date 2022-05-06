@@ -109,7 +109,7 @@ class MainFrame:
         variable = StringVar(button_frame)
         variable.set(OFFICE_PROPERTY['landowscy'])
         option_menu = OptionMenu(button_frame, variable, *OFFICE_PROPERTY.values())
-        option_menu.config(width=7)
+        option_menu.config(width=12)
         option_menu.grid(column=0, row=0, sticky=N, padx=5, pady=5)
 
         generate_btn = Button(button_frame, text="Generuj", width=10, command=lambda: generateOnClickHandler(variable.get()))
