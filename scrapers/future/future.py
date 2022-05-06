@@ -3,7 +3,7 @@ import re
 
 from scrapers.future.fields import FIELDS, FIELD_RELATIONS
 from scrapers.future.myhelpers import get_soup, format_string
-
+from scrapers.future.write import write_to_file
 
 class Fetcher:
     def __init__(self):
@@ -136,3 +136,9 @@ def get_fields_inside(soup, existing_fields):
     if deposit is not None:
         existing_fields.append(
             ["kaucja", [int(word.replace(".", "")) for word in deposit.group(0).split() if word.replace(".", "").isdigit()][0]])
+
+
+def startFuture():
+    fetcher = Fetcher()
+    write_to_file(fetcher.get_offers('https://www.futurenieruchomosci.pl/lista-ofert?market=10') + fetcher.get_offers(
+        'https://www.futurenieruchomosci.pl/lista-ofert?searchIndex=1&sort=add_date_desc&market=11'))
