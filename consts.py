@@ -9,5 +9,4 @@ DIRECTORY_TO_SAVE_CSV = 'data'
 ENCODING = "utf-8"
 NEWLINE = ''
 WRITING_MODE = 'w'
-DIRECTORY_NAME = 'csv'
 DELIMITER = ';'

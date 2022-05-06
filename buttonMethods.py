@@ -1,21 +1,20 @@
 from consts import OFFICE_PROPERTY
-from scrapers.future.future import Fetcher
-from scrapers.future.write import write_to_file
+from scrapers.future.future import startFuture
+from scrapers.american.american import startAmerican
+from scrapers.investor.investor import startInvestor
+from scrapers.level.level import startLevel
+from scrapers.landowscy.landowscy import startLandowscy
 
 
 def generateOnClickHandler(officeName):
     if officeName == OFFICE_PROPERTY['landowscy']:
-        print('Wykonuje akcje dla biura Mikołaja')
-
+        startLandowscy()
     if officeName == OFFICE_PROPERTY['future']:
-        fetcher = Fetcher()
-        write_to_file(fetcher.get_offers('https://www.futurenieruchomosci.pl/lista-ofert?market=10') + fetcher.get_offers(
-            'https://www.futurenieruchomosci.pl/lista-ofert?searchIndex=1&sort=add_date_desc&market=11'))
+        startFuture()
     if officeName == OFFICE_PROPERTY['level']:
-        print('Wykonuje akcje dla biura Szymona')
+        startLevel()
+    if officeName == OFFICE_PROPERTY['american']:
+        startAmerican()
 
     if officeName == OFFICE_PROPERTY['investor']:
-        print('Wykonuje akcje dla biura Łukasza')
-
-    if officeName == OFFICE_PROPERTY['american']:
-        print('Wykonuje akcje dla biura Kacpra')
+        startInvestor()
