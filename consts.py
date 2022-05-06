@@ -8,7 +8,6 @@ NEW_ESTATES_CSV = os.path.join(ROOT_DIR, os.path.basename('newGlobalEstates' + '
 OLD_ESTATES_CSV = os.path.join(ROOT_DIR, os.path.basename('oldGlobalEstates' + '.csv'))
 
 DIRECTORY_TO_SAVE_CSV = 'data'
-DIRECTORY_TO_SAVE_CSV = 'csv'
 
 ENCODING = "utf-8"
 NEWLINE = ''
