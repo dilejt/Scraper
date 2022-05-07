@@ -3,6 +3,8 @@ import urllib.request as urllib2
 from bs4 import BeautifulSoup
 import csv
 from datetime import datetime
+
+from numpy import double
 from consts import DELIMITER, ENCODING, NEWLINE, OFFICE_PROPERTY, WRITING_MODE
 from helpers import getFileName
 
@@ -112,7 +114,7 @@ def fetchPropertyText(self, soup):
         print("room not found")
 
     arr = [soup.find('div', attrs = {'class' : "listCategory"}),
-    soup.find('div', string = re.compile("[0-9,] PLN")),
+    soup.find('div', attrs = {'class' : "listPrice"}),
     soup.find('span', attrs = {'class' : "label label-yellow"}),
     soup.find('div', string = re.compile("[0-9,] m²")),
     soup.find('div', string = re.compile("[0-9,] m²")),
@@ -129,9 +131,14 @@ def fetchPropertyText(self, soup):
         try:
             propTxt = property.get_text().strip()
 
+            if (i == 3 or i == 4 or i == 9):
+                propTxt = double(re.findall(r'\d+', propTxt)[0])
+
             if (i == 10 or i == 11 ):
                 propTxt = int(re.findall(r'\d+', propTxt)[0])
-
+            
+            if (i == 1):
+                propTxt = int(re.findall(r'\d+', propTxt)[0] + re.findall(r'\d+', propTxt)[1])
 
         except:
             propTxt = -1
