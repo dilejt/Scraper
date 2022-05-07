@@ -3,8 +3,8 @@ from bs4 import BeautifulSoup
 from datetime import date
 import re
 import csv
-from consts import OFFICE_PROPERTY, NEWLINE, WRITING_MODE, DELIMITER, ENCODING
-from scrapers.american.myhelpers import TEMP_ARR, TEMPLATE, CSV_TYPES, LINKS, FIELD_NAMES
+from consts import OFFICE_PROPERTY, NEWLINE, WRITING_MODE, DELIMITER, ENCODING, HEADERS
+from scrapers.american.myhelpers import TEMP_ARR, TEMPLATE, LINKS, FIELD_NAMES
 from helpers import getFileName
 
 
@@ -115,7 +115,7 @@ class Searcher:
     def savetofile(self):
         with open(getFileName(OFFICE_PROPERTY['american']), WRITING_MODE, newline=NEWLINE, encoding=ENCODING) as f:
             writer = csv.writer(f, delimiter=DELIMITER)
-            writer.writerow(CSV_TYPES)
+            writer.writerow(HEADERS)
             for values in self.result:
                 writer.writerow(values.values())
 
