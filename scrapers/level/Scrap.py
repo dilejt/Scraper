@@ -3,7 +3,6 @@ import urllib.request as urllib2
 from bs4 import BeautifulSoup
 import csv
 from datetime import datetime
-
 from numpy import double
 from consts import DELIMITER, ENCODING, NEWLINE, OFFICE_PROPERTY, WRITING_MODE
 from helpers import getFileName
