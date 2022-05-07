@@ -4,6 +4,7 @@ from scrapers.american.american import startAmerican
 from scrapers.investor.investor import startInvestor
 from scrapers.level.level import startLevel
 from scrapers.landowscy.landowscy import startLandowscy
+from backend import createGlobalEstatesCsv
 
 
 def generateOnClickHandler(officeName):
@@ -17,6 +18,7 @@ def generateOnClickHandler(officeName):
         startAmerican()
     if officeName == OFFICE_PROPERTY['investor']:
         startInvestor()
+    createGlobalEstatesCsv()
 
 
 def filterOffers():

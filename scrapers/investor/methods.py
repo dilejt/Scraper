@@ -50,7 +50,7 @@ def synchronizeEstates():
     saveToCsv(dictionaryArray)
 
 def saveToCsv(dictionaryArray):
-    directory = Path.cwd() / "data"
+    directory = Path.cwd() / "data" / "investor"
 
     if not directory.exists():
         directory.mkdir(parents=False, exist_ok=False)
