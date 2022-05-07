@@ -1,3 +1,4 @@
+from pathlib import Path
 import re
 import urllib.request as urllib2
 from bs4 import BeautifulSoup
@@ -40,25 +41,26 @@ class RealEstateProperties:
                 gallery += i.get('href') + ","
                 imageCounter += 1
             
-            fetchedFields = {
-                "typ" : textPropertyArray[0],
-                "cena" :  textPropertyArray[1],
-                "typ_transakcji" :  textPropertyArray[2],
-                "powierzchnia" : textPropertyArray[3],
-                "powierzchnia_dzialki" :  textPropertyArray[4],
-                "link" : realEstate,
-                "liczba_zdjec" : imageCounter,
-                "zdjecia_linki" :  gallery,
-                "zdjecie_glowne" :  textPropertyArray[5],
-                "zdjecie_glowne_link" : textPropertyArray[6],
-                "opis" :  textPropertyArray[7],
-                "lokalizacja" :  textPropertyArray[8],
-                "cena_za_m2" :  textPropertyArray[9],
-                "liczba_lazienek" :  textPropertyArray[10],
-                "liczba_pomieszczen" : textPropertyArray[11],
-                "nazwa_biura" : "Level nieruchomości",
-                "data_skanowania" : scanDate
-            }
+            if (textPropertyArray[5] != -1):
+                fetchedFields = {
+                    "typ" : textPropertyArray[0],
+                    "cena" :  textPropertyArray[1],
+                    "typ_transakcji" :  textPropertyArray[2],
+                    "powierzchnia" : textPropertyArray[3],
+                    "powierzchnia_dzialki" :  textPropertyArray[4],
+                    "link" : realEstate,
+                    "liczba_zdjec" : imageCounter,
+                    "zdjecia_linki" :  gallery,
+                    "zdjecie_glowne" :  textPropertyArray[5],
+                    "zdjecie_glowne_link" : textPropertyArray[6],
+                    "opis" :  textPropertyArray[7],
+                    "lokalizacja" :  textPropertyArray[8],
+                    "cena_za_m2" :  textPropertyArray[9],
+                    "liczba_lazienek" :  textPropertyArray[10],
+                    "liczba_pomieszczen" : textPropertyArray[11],
+                    "nazwa_biura" : "Level nieruchomości",
+                    "data_skanowania" : scanDate
+                }
             appendArray.append(overwriteFields(self, fetchedFields, fields).copy())
 
         saveToFile(self, appendArray)
@@ -144,8 +146,11 @@ def fetchPropertyText(self, soup):
 
         arr[i] = propTxt
 
-        if i == 5 | i == 6:
-            arr[i] = property.get('href')
+        if i == 5 or i == 6:
+            try:
+                arr[i] = property.get('href')
+            except:
+                print("photo not found")
 
         i += 1
 
@@ -159,7 +164,11 @@ def overwriteFields(self, fetchedFields, fields):
     return fields
 
 def saveToFile(self, appendArray):
+    directory = Path.cwd() / "data" / "LEVEL"
+
+    if not directory.exists():
+        directory.mkdir(parents=False, exist_ok=False)
+
     with open(getFileName(OFFICE_PROPERTY['level']), WRITING_MODE, newline = NEWLINE, encoding = ENCODING) as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames = field_names, delimiter = DELIMITER)
-            writer.writeheader()
             writer.writerows(appendArray)
