@@ -1,6 +1,7 @@
 import csv
-import os
-from consts import NEW_ESTATES_CSV, OLD_ESTATES_CSV, HEADERS, READ_MODE, NEWLINE, ENCODING, DELIMITER
+from datetime import datetime
+
+from consts import *
 
 #  You have to specify absolute path the file
 def getArrayOfDictionariesFromCsv(path):
@@ -16,13 +17,13 @@ def getArrayOfDictionariesFromCsv(path):
 
     return dictionaries
 
-def getListEstates(filtersArray = None):
+def getListEstates(filtersArray=None):
     estates = getArrayOfDictionariesFromCsv(NEW_ESTATES_CSV)
 
     return filterEstates(estates, filtersArray)
 
 # Diff from oldGlobalEstates and newGlobalEstates
-def getListComparedEstates(filtersArray = None):
+def getListComparedEstates(filtersArray=None):
     newEstates = getArrayOfDictionariesFromCsv(NEW_ESTATES_CSV)
     oldEstates = getArrayOfDictionariesFromCsv(OLD_ESTATES_CSV)
 
@@ -37,3 +38,41 @@ def filterEstates(estates, filtersArray):
         return estates
     else:
         return estates
+
+# ------------------------------------------------------------------------ #
+
+def createGlobalEstatesCsv():
+    # Get newest scrapped data from offices
+    listAmerican = getNewestData(AMERICAN_DATA_DIRECTORY)
+   # listFuture = getNewestData(FUTURE_DATA_DIRECTORY)
+    listInvestor = getNewestData(INVESTOR_DATA_DIRECTORY)
+    listLandowscy = getNewestData(LANDOWSCY_DATA_DIRECTORY)
+    listLevel = getNewestData(LEVEL_DATA_DIRECTORY)
+
+    exit(1)
+    # Create distinct dictionary with estates
+    newGlobalEstates = listAmerican
+    dictContenders = listFuture + listInvestor + listLandowscy + listLevel
+
+    # for contenderEstate in dictContenders:
+    #     for estate in newGlobalEstates:
+    #         if compareEstates(estate, contenderEstate):
+    #             newGlobalEstates.append(contenderEstate)
+
+    # Write newGlobalEstates to Csv
+
+    # Sprawdz czy istnieje newGlobalEstates, jesli tak to go bziknij na starego
+    # dodaj nowa csv
+def getNewestData(path):
+    files = getNewestFile(path)
+    if not files:
+        # No data from scrapper
+        return []
+
+    file = sorted(files, key=os.path.getmtime, reverse=True)[0]
+
+    return getArrayOfDictionariesFromCsv(file)
+
+def getNewestFile(path):
+    files = os.listdir(path)
+    return [os.path.join(path, basename) for basename in files]

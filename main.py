@@ -13,6 +13,7 @@ class MainFrame:
         self.root = Tk()
         self.root.title("Scrapers")
         self.initMainGui()
+        createGlobalEstatesCsv()
         mainloop()
 
     def initMainGui(self):
@@ -137,3 +138,4 @@ def create_list(container, estates):
 
 if __name__ == '__main__':
     MainFrame()
+
