@@ -3,8 +3,8 @@ from bs4 import BeautifulSoup
 from datetime import date
 import re
 import csv
-from consts import OFFICE_PROPERTY, NEWLINE, WRITING_MODE, DELIMITER
-from .myhelpers import TEMP_ARR, TEMPLATE, CSV_TYPES, LINKS, FIELD_NAMES
+from consts import OFFICE_PROPERTY, NEWLINE, WRITING_MODE, DELIMITER, ENCODING
+from scrapers.american.myhelpers import TEMP_ARR, TEMPLATE, CSV_TYPES, LINKS, FIELD_NAMES
 from helpers import getFileName
 
 
@@ -86,6 +86,7 @@ class Searcher:
         temp['zdjecie_glowne_link'] = photos.split(',')[0]
         temp['liczba_zdjec'] = count_photos
         temp['data_skanowania'] = self.today.strftime("%d/%m/%Y")
+        print(temp)
         return temp
 
     def countpages(self):
@@ -112,7 +113,7 @@ class Searcher:
                 self.result.append(self.find_values(offer, key, TEMP_ARR))
 
     def savetofile(self):
-        with open(getFileName(OFFICE_PROPERTY['american']), WRITING_MODE, newline=NEWLINE) as f:
+        with open(getFileName(OFFICE_PROPERTY['american']), WRITING_MODE, newline=NEWLINE, encoding=ENCODING) as f:
             writer = csv.writer(f, delimiter=DELIMITER)
             writer.writerow(CSV_TYPES)
             for values in self.result:
