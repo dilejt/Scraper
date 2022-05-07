@@ -45,6 +45,9 @@ TEMP_ARR = {
 TEMPLATE = 'https://www.americanhome.pl/oferta/'
 
 LINKS = [
+    'https://www.americanhome.pl/oferty/mieszkania',
+    'https://www.americanhome.pl/oferty/domy',
+    'https://www.americanhome.pl/oferty/dzialki',
     'https://www.americanhome.pl/oferty/lokale']
 
 FIELD_NAMES = {
