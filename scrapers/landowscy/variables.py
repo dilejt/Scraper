@@ -1,12 +1,10 @@
-import os
-
 fieldNamesDict = {
     'typ': 'typ',
     'Cena': 'cena',
-    'typ transakcji': 'typ transakcji',
+    'typ transakcji': 'typ_transakcji',
     'dostepny': 'dostepny',
     'Powierzchnia': 'powierzchnia',
-    'Powierzchnia działki': 'powierzchnia działki',
+    'Powierzchnia działki': 'powierzchnia_dzialki',
     'link': 'link',
     'liczba_zdjec': 'liczba_zdjec',
     'zdjecia_linki': 'zdjecia_linki',
@@ -14,12 +12,12 @@ fieldNamesDict = {
     'zdjecie_glowne_link': 'zdjecie_glowne_link',
     'Rynek': 'rynek',
     'opis': 'opis',
-    'Liczba pokoi': 'liczba pomieszczeń',
-    'Piętro': 'piętro',
+    'Liczba pokoi': 'liczba_pomieszczen',
+    'Piętro': 'pietro',
     'lokalizacja': 'lokalizacja',
-    'Cena za m2': 'cena za m2',
-    'Typ domu': 'typ zabudowy',
-    'standard_wykończenia': 'standard_wykończenia',
+    'Cena za m2': 'cena_za_m2',
+    'Typ domu': 'typ_zabudowy',
+    'standard_wykończenia': 'standard_wykonczenia',
     'Rok budowy': 'rok_budowy',
     'balkon': 'balkon',
     'Garaż/Miejsca parkingowe': 'miejsce_parkingowe',
@@ -27,24 +25,25 @@ fieldNamesDict = {
     'Stan nieruchomości': 'stan_wykonczenia',
     'piwnica': 'piwnica',
     'umeblowane': 'umeblowane',
-    'liczba_łazienek': 'liczba_łazienek',
+    'liczba_łazienek': 'liczba_lazienek',
     'numer_oferty': 'numer_oferty',
-    'lokale użytkowe': 'lokale użytkowe',
-    'Czynsz administracyjny': 'opłaty',
+    'lokale użytkowe': 'lokale_uzytkowe',
+    'Czynsz administracyjny': 'oplaty',
     'Numer oferty': 'nr_oferty',
     'Liczba pięter': 'budynek_pietra',
     'Kaucja': 'kaucja',
-    'wystawa okien': 'wystawa okien',
+    'wystawa okien': 'wystawa_okien',
     'dojazd': 'dojazd',
-    'stan prawny działki': 'stan prawny działki',
+    'stan prawny działki': 'stan_prawny_dzialki',
     'telefon': 'telefon',
     'email': 'email',
     'nazwa_biura': 'nazwa_biura',
     'data_dodania_oferty': 'data_dodania_oferty',
     'data_skanowania': 'data_skanowania',
 }
+
 urlDomain = 'https://landowscy-nieruchomosci.pl'
 urls = []
-ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 offerList = []
 offset = 0
+subPageToScrap = '/lista-ofert/'
