@@ -11,11 +11,11 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 NEW_ESTATES_CSV = os.path.join(ROOT_DIR, os.path.basename('newGlobalEstates' + '.csv'))
 OLD_ESTATES_CSV = os.path.join(ROOT_DIR, os.path.basename('oldGlobalEstates' + '.csv'))
 
-AMERICAN_DATA_DIRECTORY = os.path.join(ROOT_DIR, DIRECTORY_TO_SAVE_CSV, 'american')
-FUTURE_DATA_DIRECTORY = os.path.join(ROOT_DIR, DIRECTORY_TO_SAVE_CSV, 'future')
-INVESTOR_DATA_DIRECTORY = os.path.join(ROOT_DIR, DIRECTORY_TO_SAVE_CSV, 'investor')
-LANDOWSCY_DATA_DIRECTORY = os.path.join(ROOT_DIR, DIRECTORY_TO_SAVE_CSV, 'landowscy')
-LEVEL_DATA_DIRECTORY = os.path.join(ROOT_DIR, DIRECTORY_TO_SAVE_CSV, 'level')
+AMERICAN_DATA_DIRECTORY = os.path.join(ROOT_DIR, DIRECTORY_TO_SAVE_CSV, OFFICE_PROPERTY['american'])
+FUTURE_DATA_DIRECTORY = os.path.join(ROOT_DIR, DIRECTORY_TO_SAVE_CSV, OFFICE_PROPERTY['future'])
+INVESTOR_DATA_DIRECTORY = os.path.join(ROOT_DIR, DIRECTORY_TO_SAVE_CSV, OFFICE_PROPERTY['investor'])
+LANDOWSCY_DATA_DIRECTORY = os.path.join(ROOT_DIR, DIRECTORY_TO_SAVE_CSV, OFFICE_PROPERTY['landowscy'])
+LEVEL_DATA_DIRECTORY = os.path.join(ROOT_DIR, DIRECTORY_TO_SAVE_CSV, OFFICE_PROPERTY['level'])
 
 ENCODING = "utf-8"
 NEWLINE = ''

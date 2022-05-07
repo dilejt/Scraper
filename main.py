@@ -5,7 +5,7 @@ from PIL import Image, ImageTk
 from io import BytesIO
 from ScrollbarFrame import ScrollbarFrame
 from functools import partial
-from backend import getListEstates, getListComparedEstates
+from backend import getListEstates, getListComparedEstates, createGlobalEstatesCsv
 from consts import OFFICE_PROPERTY
 from buttonMethods import generateOnClickHandler
 

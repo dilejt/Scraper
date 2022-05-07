@@ -44,17 +44,16 @@ def filterEstates(estates, filtersArray):
 def createGlobalEstatesCsv():
     # Get newest scrapped data from offices
     listAmerican = getNewestData(AMERICAN_DATA_DIRECTORY)
-   # listFuture = getNewestData(FUTURE_DATA_DIRECTORY)
+    listFuture = getNewestData(FUTURE_DATA_DIRECTORY)
     listInvestor = getNewestData(INVESTOR_DATA_DIRECTORY)
     listLandowscy = getNewestData(LANDOWSCY_DATA_DIRECTORY)
     listLevel = getNewestData(LEVEL_DATA_DIRECTORY)
 
-    exit(1)
     # Create distinct dictionary with estates
     newGlobalEstates = listAmerican
     dictContenders = listFuture + listInvestor + listLandowscy + listLevel
 
-    # for contenderEstate in dictContenders:
+    # for contenderEstate in dictContenders: todo dodac jakiegos distincta
     #     for estate in newGlobalEstates:
     #         if compareEstates(estate, contenderEstate):
     #             newGlobalEstates.append(contenderEstate)
@@ -74,5 +73,8 @@ def getNewestData(path):
     return getArrayOfDictionariesFromCsv(file)
 
 def getNewestFile(path):
+    if not os.path.exists(path):
+        os.mkdir(path)
+
     files = os.listdir(path)
     return [os.path.join(path, basename) for basename in files]
