@@ -15,6 +15,9 @@ def generateOnClickHandler(officeName):
         startLevel()
     if officeName == OFFICE_PROPERTY['american']:
         startAmerican()
-
     if officeName == OFFICE_PROPERTY['investor']:
         startInvestor()
+
+
+def filterOffers():
+    print('filtruje sobie rzeczy')
