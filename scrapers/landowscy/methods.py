@@ -67,7 +67,7 @@ def checkOffer(url):
     offer = {
         'link': urlDomain + url,
         'typ': urlDivided[0].replace('/', ''),
-        'typ transakcji': urlDivided[1],
+        'typ_transakcji': urlDivided[1],
         'lokalizacja': localization,
         'telefon': phoneNumber[0],
         'email': email,
@@ -110,20 +110,3 @@ def generateCsvFile(list, fieldNames):
         writer = csv.DictWriter(csvFile, delimiter=DELIMITER, fieldnames=fieldNames)
         writer.writeheader()
         writer.writerows(list)
-
-
-def readCsv(path):
-    list = []
-    with open(path, 'r', encoding="utf-8") as theFile:
-        reader = csv.DictReader(theFile)
-        for line in reader:
-            list.append(line)
-    return list
-
-
-def newestFiles(path):
-    files = os.listdir(path)
-    paths = [os.path.join(path, basename) for basename in files]
-    return sorted(paths, key=os.path.getmtime, reverse=True)
-
-
