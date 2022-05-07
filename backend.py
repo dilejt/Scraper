@@ -49,11 +49,11 @@ def filterEstates(filtersDict):
                     if filtersDict[filterKey].lower() not in offer['typ'].lower():
                         shouldAppend = False
                 if filterKeyDict['priceMin'] == filterKey:
-                    if int(filtersDict[filterKey]) >= int(offer['cena'].replace('zł', '').replace(' ', '')):
+                    if float(filtersDict[filterKey]) >= float(offer['cena'].replace('zł', '').replace(' ', '').replace(',', '.')):
                         shouldAppend = False
                 if filterKeyDict['priceMax'] == filterKey:
                     if filtersDict[filterKey] != '':
-                        if int(filtersDict[filterKey]) <= int(offer['cena'].replace('zł', '').replace(' ', '')):
+                        if float(filtersDict[filterKey]) <= float(offer['cena'].replace('zł', '').replace(' ', '').replace(',', '.')):
                             shouldAppend = False
                 if filterKeyDict['market'] == filterKey:
                     if filtersDict[filterKey].lower() not in offer['rynek'].lower():
