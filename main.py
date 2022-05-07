@@ -4,10 +4,11 @@ from PIL import Image, ImageTk
 from io import BytesIO
 from ScrollbarFrame import ScrollbarFrame
 from functools import partial
-from tkinter.ttk import Treeview
-from consts import OFFICE_PROPERTY,ROOT_DIR
+from backend import getListEstates, getListComparedEstates
+from consts import OFFICE_PROPERTY
 from buttonMethods import generateOnClickHandler
-from backend import *
+
+
 class MainFrame:
     def __init__(self):
         self.root = Tk()
@@ -20,75 +21,79 @@ class MainFrame:
         self.root.columnconfigure(1, weight=5)
         self.root.columnconfigure(2, weight=2)
 
-        offers_label = Label(self.root, text="Oferty")
-        offers_label.grid(column=0, row=0, sticky=W, padx=5, pady=5)
+        # grid(0,0)
+        offersLabel = Label(self.root, text="Oferty")
+        offersLabel.grid(column=0, row=0, sticky=W, padx=5, pady=5)
 
-        # Begining of filter frame
-        offers_filter_frame = Frame(self.root)
+        # grid(1,0)
+        offersLabel = Label(self.root, text="Aktualności")
+        offersLabel.grid(column=1, row=0, sticky=W, padx=5, pady=5)
 
-        offers_filter_input = Entry(offers_filter_frame, width=40)
-        offers_filter_input.grid(column=0, row=0, sticky=W, padx=5, pady=5)
+        # grid(0,1)
+        offersFilterFrame = Frame(self.root)
 
-        offers_filter_variable = StringVar(offers_filter_frame)
-        offers_filter_variable.set("typ")
-        offers_option_menu = OptionMenu(offers_filter_frame, offers_filter_variable, "typ", "cena", "biuro",
-                                        "lokalizacja", "powierzchnia")
-        offers_option_menu.config(width=7)
-        offers_option_menu.grid(column=1, row=0, sticky=N, padx=5, pady=5)
+        offersFilterInput = Entry(offersFilterFrame, width=40)
+        offersFilterInput.grid(column=0, row=0, sticky=W, padx=5, pady=5)
 
-        offers_files_btn = Button(offers_filter_frame, text="Filtruj")
-        offers_files_btn.grid(column=2, row=0, sticky=W, padx=5, pady=5)
+        offersFilterVariable = StringVar(offersFilterFrame)
+        offersFilterVariable.set("typ")
+        offersOptionMenu = OptionMenu(offersFilterFrame, offersFilterVariable, "typ", "cena", "biuro",
+                                      "lokalizacja", "powierzchnia")
+        offersOptionMenu.config(width=7)
+        offersOptionMenu.grid(column=1, row=0, sticky=W, padx=5, pady=5)
 
-        offers_filter_frame.grid(column=0, row=1, sticky=W, padx=5, pady=5)
+        offersFilesBtn = Button(offersFilterFrame, text="Filtruj")
+        offersFilesBtn.grid(column=2, row=0, sticky=W, padx=5, pady=5)
 
-        updates_filter_frame = Frame(self.root)
+        offersFilterFrame.grid(column=0, row=1, sticky=W, padx=5, pady=5)
 
-        updates_filter_input = Entry(updates_filter_frame, width=40)
-        updates_filter_input.grid(column=0, row=0, sticky=W, padx=5, pady=5)
+        # grid(1,1)
+        updatesFilterFrame = Frame(self.root)
 
-        offers_filter_frame.grid(column=0, row=1, sticky=W, padx=5, pady=5)
-        # End of filter frame
-        updates_filter_variable = StringVar(updates_filter_frame)
-        updates_filter_variable.set("typ")
-        updates_option_menu = OptionMenu(updates_filter_frame, updates_filter_variable, "typ", "cena", "biuro",
-                                         "lokalizacja", "powierzchnia")
-        updates_option_menu.config(width=7)
-        updates_option_menu.grid(column=1, row=0, sticky=N, padx=5, pady=5)
+        updatesFilterInput = Entry(updatesFilterFrame, width=40)
+        updatesFilterInput.grid(column=0, row=0, sticky=W, padx=5, pady=5)
 
-        updates_files_btn = Button(updates_filter_frame, text="Filtruj")
-        updates_files_btn.grid(column=2, row=0, sticky=W, padx=5, pady=5)
+        updatesFilterVariable = StringVar(updatesFilterFrame)
+        updatesFilterVariable.set("typ")
+        updatesOptionMenu = OptionMenu(updatesFilterFrame, updatesFilterVariable, "typ", "cena", "biuro",
+                                       "lokalizacja", "powierzchnia")
+        updatesOptionMenu.config(width=7)
+        updatesOptionMenu.grid(column=1, row=0, sticky=N, padx=5, pady=5)
 
-        updates_filter_frame.grid(column=1, row=1, sticky=W, padx=5, pady=5)
+        updatesFilesBtn = Button(updatesFilterFrame, text="Filtruj")
+        updatesFilesBtn.grid(column=2, row=0, sticky=W, padx=5, pady=5)
 
-        # Begining of lists todo dodac jako 2 parametr zassane dane z global csv'ki
-        offers_table = create_list(self.root, getListEstates())
-        offers_table.grid(column=0, row=2, sticky=W, padx=5, pady=5)
+        updatesFilterFrame.grid(column=1, row=1, sticky=W, padx=5, pady=5)
 
-        updates_table = create_list(self.root, getListComparedEstates())
-        updates_table.grid(column=1, row=2, sticky=W, padx=5, pady=5)
-        # End of lists
+        # grid(0,2) todo dodac jako 2 parametr zassane dane z global csv'ki
+        offersTable = createList(self.root, getListEstates())
+        offersTable.grid(column=0, row=2, sticky=W, padx=5, pady=5)
 
-        # Begining of button frame
-        button_frame = Frame(self.root)
+        # grid(1,2)
+        updatesTable = createList(self.root, getListComparedEstates())
+        updatesTable.grid(column=1, row=2, sticky=W, padx=5, pady=5)
 
-        variable = StringVar(button_frame)
+        # grid(2,2)
+        buttonFrame = Frame(self.root)
+
+        variable = StringVar(buttonFrame)
         variable.set(OFFICE_PROPERTY['landowscy'])
-        option_menu = OptionMenu(button_frame, variable, *OFFICE_PROPERTY.values())
-        option_menu.config(width=12)
-        option_menu.grid(column=0, row=0, sticky=N, padx=5, pady=5)
+        optionMenu = OptionMenu(buttonFrame, variable, *OFFICE_PROPERTY.values())
+        optionMenu.config(width=12)
+        optionMenu.grid(column=0, row=0, sticky=N, padx=5, pady=5)
 
-        generate_btn = Button(button_frame, text="Generuj", width=10,
-                              command=lambda: generateOnClickHandler(variable.get()))
-        generate_btn.grid(column=0, row=1, sticky=N, padx=5, pady=5)
+        generateBtn = Button(buttonFrame, text="Generuj", width=10,
+                             command=lambda: generateOnClickHandler(variable.get()))
+        generateBtn.grid(column=0, row=1, sticky=N, padx=5, pady=5)
 
-        merge_btn = Button(button_frame, text="Łączenie", width=10)
-        merge_btn.grid(column=0, row=2, sticky=N, padx=5, pady=5)
+        mergeBtn = Button(buttonFrame, text="Łączenie", width=10)
+        mergeBtn.grid(column=0, row=2, sticky=N, padx=5, pady=5)
 
-        files_btn = Button(button_frame, text="Pliki...", width=10)
-        files_btn.grid(column=0, row=3, sticky=N, padx=5, pady=5)
+        filesBtn = Button(buttonFrame, text="Pliki...", width=10)
+        filesBtn.grid(column=0, row=3, sticky=N, padx=5, pady=5)
 
-        button_frame.grid(column=2, row=2, sticky=N, padx=5, pady=5)
-        # End of button frame
+        buttonFrame.grid(column=2, row=2, sticky=N, padx=5, pady=5)
+
 
 # create window with additional estate data
 def initExtraInformationGui(estate):
@@ -107,8 +112,9 @@ def initExtraInformationGui(estate):
     photo.image = render
     photo.grid(column=0, row=0, columnspan=2, sticky=N)
 
+
 # create list of estates
-def create_list(container, estates):
+def createList(container, estates):
     sFrame = ScrollbarFrame(container)
     frame = sFrame.scrolled_frame
 
@@ -134,6 +140,7 @@ def create_list(container, estates):
         Button(frame, text="Zobacz", width=8, command=action_with_arg).grid(column=5, row=id, sticky=N)
 
     return sFrame
+
 
 if __name__ == '__main__':
     MainFrame()
