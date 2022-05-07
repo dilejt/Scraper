@@ -53,11 +53,11 @@ class Searcher:
             if values.strong.previous_sibling.find('<sup>'):
                 if 'Piętro' == values.strong.previous_sibling.get_text():
                     if re.findall("(.*)/.", self.get_value(values.strong.contents)):
-                        temp['piętro'] = re.findall("(.*)/.", self.get_value(values.strong.contents))[0]
+                        temp['pietro'] = re.findall("(.*)/.", self.get_value(values.strong.contents))[0]
                     if re.findall(".*/(.*)", self.get_value(values.strong.contents)):
                         temp['budynek_pietra'] = re.findall(".*/(.*)", self.get_value(values.strong.contents))[0]
                 elif 'dzialki' == key and 'Powierzchnia' == values.strong.previous_sibling.get_text():
-                    temp['powierzchnia działki'] = self.get_value(values.strong.contents)
+                    temp['powierzchnia_dzialki'] = self.get_value(values.strong.contents)
                 elif 'Cena' == values.strong.previous_sibling.get_text():
                     temp['cena'] = ''.join(re.findall("(\d*\d)", self.get_value(values.strong.contents)))
                 elif 'Numer oferty' == values.strong.previous_sibling.get_text():
@@ -114,10 +114,8 @@ class Searcher:
 
     def savetofile(self):
         with open(getFileName(OFFICE_PROPERTY['american']), WRITING_MODE, newline=NEWLINE, encoding=ENCODING) as f:
-            writer = csv.writer(f, delimiter=DELIMITER)
-            writer.writerow(HEADERS)
-            for values in self.result:
-                writer.writerow(values.values())
+            writer = csv.DictWriter(f, delimiter=DELIMITER, fieldnames=HEADERS)
+            writer.writerows(self.result)
 
     def run(self):
         self.countpages()
