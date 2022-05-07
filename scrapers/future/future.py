@@ -1,14 +1,16 @@
 import datetime
 import re
 
+from progressBar import ProgressBar
 from scrapers.future.fields import FIELDS, FIELD_RELATIONS
-from scrapers.future.myhelpers import get_soup, format_string
+from scrapers.future.myhelpers import get_soup, format_string, get_len_offers
 from scrapers.future.write import write_to_file
 
+
 class Fetcher:
-    def __init__(self):
+    def __init__(self, progressBar):
+        self.progressBar = progressBar
         self.result_dict = None
-        self.counter = 0
 
     def get_offers(self, url):
         self.result_dict = []
@@ -75,9 +77,9 @@ class Fetcher:
                     result.append('-1')
                 else:
                     result.append([element[1] for element in existing_fields if element[0] == field][0])
-            self.counter += 1
             print(result)
             page_result.append(result)
+            self.progressBar.progress()
         self.result_dict += page_result
 
 
@@ -138,7 +140,8 @@ def get_fields_inside(soup, existing_fields):
             ["kaucja", [int(word.replace(".", "")) for word in deposit.group(0).split() if word.replace(".", "").isdigit()][0]])
 
 
-def startFuture():
-    fetcher = Fetcher()
+def startFuture(root):
+    progressBar = ProgressBar(root, get_len_offers())
+    fetcher = Fetcher(progressBar)
     write_to_file(fetcher.get_offers('https://www.futurenieruchomosci.pl/lista-ofert?market=10') + fetcher.get_offers(
         'https://www.futurenieruchomosci.pl/lista-ofert?searchIndex=1&sort=add_date_desc&market=11'))

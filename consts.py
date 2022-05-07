@@ -1,15 +1,23 @@
 import os
+from pathlib import Path
 
 offersList = []
 filteredOferList = []
 
 OFFICE_PROPERTY = {'landowscy': 'LANDOWSCY', 'future': 'FUTURE', 'level': 'LEVEL', 'investor': 'Investor', 'american': 'AmericanHome'}
 
+DIRECTORY_TO_SAVE_CSV = 'data'
+
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+
 NEW_ESTATES_CSV = os.path.join(ROOT_DIR, os.path.basename('newGlobalEstates' + '.csv'))
 OLD_ESTATES_CSV = os.path.join(ROOT_DIR, os.path.basename('oldGlobalEstates' + '.csv'))
 
-DIRECTORY_TO_SAVE_CSV = 'data'
+AMERICAN_DATA_DIRECTORY = os.path.join(ROOT_DIR, DIRECTORY_TO_SAVE_CSV, OFFICE_PROPERTY['american'])
+FUTURE_DATA_DIRECTORY = os.path.join(ROOT_DIR, DIRECTORY_TO_SAVE_CSV, OFFICE_PROPERTY['future'])
+INVESTOR_DATA_DIRECTORY = os.path.join(ROOT_DIR, DIRECTORY_TO_SAVE_CSV, OFFICE_PROPERTY['investor'])
+LANDOWSCY_DATA_DIRECTORY = os.path.join(ROOT_DIR, DIRECTORY_TO_SAVE_CSV, OFFICE_PROPERTY['landowscy'])
+LEVEL_DATA_DIRECTORY = os.path.join(ROOT_DIR, DIRECTORY_TO_SAVE_CSV, OFFICE_PROPERTY['level'])
 
 ENCODING = "utf-8"
 NEWLINE = ''

@@ -1,8 +1,7 @@
 import csv
 import os
-from consts import NEW_ESTATES_CSV, OLD_ESTATES_CSV, HEADERS, READ_MODE, NEWLINE, ENCODING, DELIMITER, offersList, \
-    filterKeyDict, filteredOferList
-
+from datetime import datetime
+from consts import *
 
 #  You have to specify absolute path the file
 def getArrayOfDictionariesFromCsv(path, dictionaries):
@@ -29,8 +28,13 @@ def getListComparedEstates(filtersArray=None):
     newEstates = getArrayOfDictionariesFromCsv(NEW_ESTATES_CSV)
     oldEstates = getArrayOfDictionariesFromCsv(OLD_ESTATES_CSV)
 
-    # todo zrobic distinct pomiedzy estates
-    distinctEstates = newEstates
+    distinctEstates = []
+    if not os.path.isfile(OLD_ESTATES_CSV):
+        return filterEstates(newEstates, filtersArray)
+
+    for newEstate in newEstates:
+        if not list(filter(lambda estate: estate['nr_oferty'] == newEstate['nr_oferty'], oldEstates)):
+            distinctEstates.append(newEstate)
 
     return filterEstates(distinctEstates, filtersArray)
 
@@ -59,4 +63,51 @@ def filterEstates(filtersDict):
                         shouldAppend = False
             if shouldAppend:
                 filteredOferList.append(offer)
+# ------------------------------------------------------------------------ #
 
+def createGlobalEstatesCsv():
+    # Get newest scrapped data from offices
+    listAmerican = getNewestData(AMERICAN_DATA_DIRECTORY)
+    listFuture = getNewestData(FUTURE_DATA_DIRECTORY)
+    listInvestor = getNewestData(INVESTOR_DATA_DIRECTORY)
+    listLandowscy = getNewestData(LANDOWSCY_DATA_DIRECTORY)
+    listLevel = getNewestData(LEVEL_DATA_DIRECTORY)
+
+    # Create distinct dictionary with estates
+    newGlobalEstates = listAmerican
+    dictContenders = listFuture + listInvestor + listLandowscy + listLevel
+
+    # todo distinct na dictionary w trakcie generacji newGlobalEstates lub nie zobaczymy z czasem xD
+
+    newGlobalEstates = newGlobalEstates + dictContenders
+
+    checkForOldGlobalEstates()
+
+    generateCsvFile(newGlobalEstates)
+
+def getNewestData(path):
+    files = getNewestFile(path)
+    if not files:
+        # No data from scrapper
+        return []
+
+    file = sorted(files, key=os.path.getmtime, reverse=True)[0]
+
+    return getArrayOfDictionariesFromCsv(file)
+
+def getNewestFile(path):
+    if not os.path.exists(path):
+        os.mkdir(path)
+
+    files = os.listdir(path)
+    return [os.path.join(path, basename) for basename in files]
+
+def generateCsvFile(list):
+
+    with open(NEW_ESTATES_CSV, WRITING_MODE, newline=NEWLINE, encoding=ENCODING) as csvFile:
+        writer = csv.DictWriter(csvFile, delimiter=DELIMITER, fieldnames=HEADERS)
+        writer.writerows(list)
+
+def checkForOldGlobalEstates():
+    if os.path.isfile(NEW_ESTATES_CSV):
+        os.rename(NEW_ESTATES_CSV, OLD_ESTATES_CSV)
