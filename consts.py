@@ -1,6 +1,8 @@
 import os
 
-# przyklad poslugiwania sie dict: OFFICE_PROPERTY['landowscy'] wyswietli: 'LANDOWSCY'
+offersList = []
+filteredOferList = []
+
 OFFICE_PROPERTY = {'landowscy': 'LANDOWSCY', 'future': 'FUTURE', 'level': 'LEVEL', 'investor': 'Investor', 'american': 'AmericanHome'}
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -58,3 +60,12 @@ HEADERS = [
     'data_dodania_oferty',
     'data_skanowania'
 ]
+
+filterKeyDict = {
+    'type': 'type',
+    'priceMin': 'priceMin',
+    'priceMax': 'priceMax',
+    'localization': 'localization',
+    'market': 'market',
+    'office': 'office',
+}

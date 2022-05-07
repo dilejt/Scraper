@@ -1,9 +1,13 @@
-from consts import OFFICE_PROPERTY
+from tkinter import W
+
+from consts import OFFICE_PROPERTY, offersList, NEW_ESTATES_CSV, filteredOferList
+from mainFrameMethods import createList, invalidateOffersFrame
 from scrapers.future.future import startFuture
 from scrapers.american.american import startAmerican
 from scrapers.investor.investor import startInvestor
 from scrapers.level.level import startLevel
 from scrapers.landowscy.landowscy import startLandowscy
+from backend import filterEstates, getArrayOfDictionariesFromCsv
 
 
 def generateOnClickHandler(officeName):
@@ -19,5 +23,16 @@ def generateOnClickHandler(officeName):
         startInvestor()
 
 
-def filterOffers():
-    print('filtruje sobie rzeczy')
+def filterOffers(frame, container, type, priceMin, priceMax, localization, market, office):
+    if priceMin == '':
+        priceMin = 0
+    inputDict = {
+        'type': type,
+        'priceMin': priceMin,
+        'priceMax': priceMax,
+        'localization': localization,
+        'market': market,
+        'office': office,
+    }
+    filterEstates(inputDict)
+    invalidateOffersFrame(frame, container)

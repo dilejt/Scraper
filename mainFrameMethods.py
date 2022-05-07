@@ -6,6 +6,8 @@ from ScrollbarFrame import ScrollbarFrame
 from functools import partial
 import re
 
+from consts import filteredOferList
+
 
 def validate(string):
     regex = re.compile(r"(\+|\-)?[0-9,]*$")
@@ -71,3 +73,10 @@ def createList(container, estates):
         Button(frame, text="Zobacz", width=8, command=action_with_arg).grid(column=5, row=id, sticky=N)
 
     return sFrame
+
+
+def invalidateOffersFrame(frame, container):
+    for widget in frame.winfo_children():
+        widget.destroy()
+    offersTable = createList(container, filteredOferList)
+    offersTable.grid(column=0, row=2, sticky=W, padx=5, pady=5)
