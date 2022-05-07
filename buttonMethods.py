@@ -1,3 +1,4 @@
+from threading import Thread
 from consts import OFFICE_PROPERTY
 from scrapers.future.future import startFuture
 from scrapers.american.american import startAmerican
@@ -7,11 +8,11 @@ from scrapers.landowscy.landowscy import startLandowscy
 from backend import createGlobalEstatesCsv
 
 
-def generateOnClickHandler(officeName):
+def generateOnClickHandler(officeName, root):
     if officeName == OFFICE_PROPERTY['landowscy']:
         startLandowscy()
     if officeName == OFFICE_PROPERTY['future']:
-        startFuture()
+        Thread(target=lambda: startFuture(root)).start()
     if officeName == OFFICE_PROPERTY['level']:
         startLevel()
     if officeName == OFFICE_PROPERTY['american']:
