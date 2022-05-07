@@ -62,7 +62,7 @@ def saveToCsv(dictionaryArray):
 
 def getEstateInfoPagination(maxOffsetPagination, host):
     dictionaryArrayNestedPages = []
-    for page in range(10, 20, 10):
+    for page in range(10, 10, 10):
         for url in getPage(page, host):
             dataRow = processLinkEstate(url, host)
             if dataRow is not None:

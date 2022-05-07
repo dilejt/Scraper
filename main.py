@@ -118,7 +118,10 @@ def create_list(container, estates):
 
     for id, estate in enumerate(estates):
         response = requests.get(estate.get('zdjecie_glowne'))
-        imgLoad = Image.open(BytesIO(response.content))
+        try:
+            imgLoad = Image.open(BytesIO(response.content))
+        except:
+            print("temp img didn't find")
         imgLoad.thumbnail((58, 58), Image.ANTIALIAS)
         render = ImageTk.PhotoImage(imgLoad)
         # Associate img with label & alocate in grid
