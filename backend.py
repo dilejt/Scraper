@@ -27,8 +27,13 @@ def getListComparedEstates(filtersArray=None):
     newEstates = getArrayOfDictionariesFromCsv(NEW_ESTATES_CSV)
     oldEstates = getArrayOfDictionariesFromCsv(OLD_ESTATES_CSV)
 
-    # todo zrobic distinct pomiedzy estates
-    distinctEstates = newEstates
+    distinctEstates = []
+    if not os.path.isfile(OLD_ESTATES_CSV):
+        return filterEstates(newEstates, filtersArray)
+
+    for newEstate in newEstates:
+        if not list(filter(lambda estate: estate['nr_oferty'] == newEstate['nr_oferty'], oldEstates)):
+            distinctEstates.append(newEstate)
 
     return filterEstates(distinctEstates, filtersArray)
 
@@ -53,15 +58,14 @@ def createGlobalEstatesCsv():
     newGlobalEstates = listAmerican
     dictContenders = listFuture + listInvestor + listLandowscy + listLevel
 
-    # for contenderEstate in dictContenders: todo dodac jakiegos distincta
-    #     for estate in newGlobalEstates:
-    #         if compareEstates(estate, contenderEstate):
-    #             newGlobalEstates.append(contenderEstate)
+    # todo distinct na dictionary w trakcie generacji newGlobalEstates lub nie zobaczymy z czasem xD
 
-    # Write newGlobalEstates to Csv
+    newGlobalEstates = newGlobalEstates + dictContenders
 
-    # Sprawdz czy istnieje newGlobalEstates, jesli tak to go bziknij na starego
-    # dodaj nowa csv
+    checkForOldGlobalEstates()
+
+    generateCsvFile(newGlobalEstates)
+
 def getNewestData(path):
     files = getNewestFile(path)
     if not files:
@@ -78,3 +82,13 @@ def getNewestFile(path):
 
     files = os.listdir(path)
     return [os.path.join(path, basename) for basename in files]
+
+def generateCsvFile(list):
+
+    with open(NEW_ESTATES_CSV, WRITING_MODE, newline=NEWLINE, encoding=ENCODING) as csvFile:
+        writer = csv.DictWriter(csvFile, delimiter=DELIMITER, fieldnames=HEADERS)
+        writer.writerows(list)
+
+def checkForOldGlobalEstates():
+    if os.path.isfile(NEW_ESTATES_CSV):
+        os.rename(NEW_ESTATES_CSV, OLD_ESTATES_CSV)
