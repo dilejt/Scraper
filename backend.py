@@ -9,11 +9,16 @@ def getArrayOfDictionariesFromCsv(path, dictionaries):
     # Check if the path exists
     if not os.path.exists(path):
         return []
-
-    with open(path, READ_MODE, newline=NEWLINE, encoding=ENCODING) as file:
-        reader = csv.DictReader(file, fieldnames=HEADERS, delimiter=DELIMITER)
-        for row in reader:
-            dictionaries.append(row)
+    if "FUTURE" in path:
+        with open(path, READ_MODE, newline=NEWLINE, encoding=None, errors='ignore') as file:
+            reader = csv.DictReader(file, fieldnames=HEADERS, delimiter=DELIMITER)
+            for row in reader:
+                dictionaries.append(row)
+    else:
+        with open(path, READ_MODE, newline=NEWLINE, encoding=ENCODING, errors='ignore') as file:
+            reader = csv.DictReader(file, fieldnames=HEADERS, delimiter=DELIMITER)
+            for row in reader:
+                dictionaries.append(row)
 
     return dictionaries
 
