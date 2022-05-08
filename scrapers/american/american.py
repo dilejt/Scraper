@@ -72,7 +72,7 @@ class Searcher:
             else:
                 if values.strong.previous_sibling.previous_sibling + values.strong.previous_sibling.get_text() in FIELD_NAMES:
                     temp[FIELD_NAMES[
-                            values.strong.previous_sibling.previous_sibling + values.strong.previous_sibling.get_text()]] = self.get_value(
+                            values.strong.previous_sibling.previous_sibling + values.strong.previous_sibling.get_text()]] = self.getValue(
                         values.strong.contents)
 
         for values in soup.findAll('div', class_='tab-pane fade active in'):
