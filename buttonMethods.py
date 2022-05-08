@@ -21,7 +21,7 @@ def generateOnClickHandler(officeName, root):
     if officeName == OFFICE_PROPERTY['american']:
         Thread(target=lambda: startAmerican(root)).start()
     if officeName == OFFICE_PROPERTY['investor']:
-        startInvestor()
+        Thread(target=lambda: startInvestor(root)).start()
     createGlobalEstatesCsv()
 
 

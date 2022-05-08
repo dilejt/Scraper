@@ -1,4 +1,4 @@
 from scrapers.investor.methods import synchronizeEstates
 
-def startInvestor():
-    synchronizeEstates()
+def startInvestor(root):
+    synchronizeEstates(root)
