@@ -2,6 +2,8 @@ import urllib
 import urllib.parse
 import urllib.request
 from datetime import datetime
+
+from progressBar import ProgressBar
 from scrapers.investor.RowStructure import RowStructure
 from bs4 import BeautifulSoup
 from pathlib import Path
@@ -30,7 +32,7 @@ def getPage(page, host):
     soup = BeautifulSoup(urlContent, 'html.parser')
     return processUrlContent(soup, host)
 
-def synchronizeEstates():
+def synchronizeEstates(root):
     homeUrl = "https://investor.net.pl/nieruchomosci/"
     host = "https://investor.net.pl/"
 
@@ -39,13 +41,14 @@ def synchronizeEstates():
     arrayUrls = processUrlContent(soup, host)
     dictionaryArray = []
     maxOffsetPagination = getMaxOffsetPagination(soup)
+    progressBar = ProgressBar(root, maxOffsetPagination-10)
 
     for url in arrayUrls:
         dataRow = processLinkEstate(url, host)
         if dataRow is not None:
             dictionaryArray.append(dataRow)
     # Get data from other pages
-    dictionaryArray = dictionaryArray + getEstateInfoPagination(maxOffsetPagination, host)
+    dictionaryArray = dictionaryArray + getEstateInfoPagination(maxOffsetPagination, host, progressBar)
     # save dictionaryArray
     saveToCsv(dictionaryArray)
 
@@ -60,10 +63,11 @@ def saveToCsv(dictionaryArray):
         writer = csv.writer(f, delimiter=';')
         writer.writerows(dictionaryArray)
 
-def getEstateInfoPagination(maxOffsetPagination, host):
+def getEstateInfoPagination(maxOffsetPagination, host, progressBar):
     dictionaryArrayNestedPages = []
-    for page in range(10, 10, 10):
+    for page in range(10, maxOffsetPagination-10, 10):
         for url in getPage(page, host):
+            progressBar.progress()
             dataRow = processLinkEstate(url, host)
             if dataRow is not None:
                 dictionaryArrayNestedPages.append(dataRow)
