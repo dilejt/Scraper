@@ -66,7 +66,7 @@ class Fetcher:
                 existing_fields.append(["lokalizacja", offer.select_one(".list-title:has(span)").get_text().strip()])
             # rynek
             if "market=10" in url:
-                existing_fields.append(["rynek", "piewotny"])
+                existing_fields.append(["rynek", "pierwotny"])
             elif "market=11" in url:
                 existing_fields.append(["rynek", "wtórny"])
             # nazwa_biura
