@@ -10,3 +10,9 @@ def get_soup(url):
 
 def format_string(input_string):
     return input_string.strip().replace("\r\n", "").replace(" ", "")
+
+
+def get_len_offers():
+    soup = get_soup("https://www.futurenieruchomosci.pl/lista-ofert")
+    length = [int(word) for word in soup.select_one(".tit").get_text().split() if word.isdigit()][0]
+    return int(length)

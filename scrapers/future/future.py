@@ -1,14 +1,17 @@
 import datetime
 import re
 
-from scrapers.future.fields import FIELDS, FIELD_RELATIONS
-from scrapers.future.myhelpers import get_soup, format_string
+from consts import HEADERS
+from progressBar import ProgressBar
+from scrapers.future.fields import FIELD_RELATIONS
+from scrapers.future.myhelpers import get_soup, format_string, get_len_offers
 from scrapers.future.write import write_to_file
 
+
 class Fetcher:
-    def __init__(self):
+    def __init__(self, progressBar):
+        self.progressBar = progressBar
         self.result_dict = None
-        self.counter = 0
 
     def get_offers(self, url):
         self.result_dict = []
@@ -46,13 +49,13 @@ class Fetcher:
             if carousel is None:
                 existing_fields.append(["liczba_zdjec", "1"])
                 existing_fields.append(["zdjecia_linki", link])
-                # existing_fields.append(["zdjecie_glowne", get_as_base64(link)])
+                existing_fields.append(["zdjecie_glowne", link])
                 existing_fields.append(["zdjecie_glowne_link", link])
             else:
                 existing_fields.append(["liczba_zdjec", len(carousel.select('.item'))])
                 existing_fields.append(
                     ["zdjecia_linki", [re.search('\'(.+?)\'', item.find("span")['style']).group(1) for item in carousel.select('.item')]])
-                # existing_fields.append(["zdjecie_glowne", get_as_base64(link)])
+                existing_fields.append(["zdjecie_glowne", link])
                 existing_fields.append(["zdjecie_glowne_link", link])
 
             # lokalizacja
@@ -70,14 +73,14 @@ class Fetcher:
             # data_skanowania
             existing_fields.append(["data_skanowania", datetime.datetime.now()])
 
-            for field in FIELDS:
+            for field in HEADERS:
                 if field not in [element[0] for element in existing_fields]:
                     result.append('-1')
                 else:
                     result.append([element[1] for element in existing_fields if element[0] == field][0])
-            self.counter += 1
             print(result)
             page_result.append(result)
+            self.progressBar.progress()
         self.result_dict += page_result
 
 
@@ -90,7 +93,7 @@ def get_fields_inside(soup, existing_fields):
             continue  # jasna kuchnia, ogrzewanie
         value = td.select_one(".offer-data-values").get_text()
         field_relation_name = FIELD_RELATIONS[[list(element.keys())[0] for element in FIELD_RELATIONS].index(field_name)].get(field_name)
-        if "piętro" == field_relation_name and not format_string(value).find('z') == -1:
+        if "pietro" == field_relation_name and not format_string(value).find('z') == -1:
             existing_fields.append([field_relation_name, format_string(value)[0:format_string(value).find('z')]])
             existing_fields.append(["budynek_pietra", format_string(value)[format_string(value).find('z') + 1:]])
         elif "cena" in field_relation_name:
@@ -103,9 +106,9 @@ def get_fields_inside(soup, existing_fields):
             existing_fields.append([field_relation_name, format_string(value)])
     # typ transakcji
     if "sprzedaż" in format_string(soup.select_one('.box-area').get_text()):
-        existing_fields.append(["typ transakcji", "Sprzedaż"])
+        existing_fields.append(["typ_transakcji", "Sprzedaż"])
     elif "wynajem" in format_string(soup.select_one('.box-area').get_text()):
-        existing_fields.append(["typ transakcji", "Wynajem"])
+        existing_fields.append(["typ_transakcji", "Wynajem"])
     # typ
     building_type = soup.select_one('.box-area').get_text().encode('ISO-8859-2', 'ignore').decode('ISO-8859-2')
     existing_fields.append(["typ", building_type[0:building_type.find('na ') - 1]])
@@ -122,9 +125,9 @@ def get_fields_inside(soup, existing_fields):
         existing_fields.append(["winda", True])
     # standard_wykończenia
     if re.search('pod.klucz', description, re.IGNORECASE):
-        existing_fields.append(["standard_wykończenia", "pod klucz"])
+        existing_fields.append(["standard_wykonczenia", "pod klucz"])
     elif re.search('stan. deweloperski', description, re.IGNORECASE):
-        existing_fields.append(["standard_wykończenia", "deweloperski"])
+        existing_fields.append(["standard_wykonczenia", "deweloperski"])
     # piwnica
     if re.search('piwnic.?', description, re.IGNORECASE):
         existing_fields.append(["piwnica", True])
@@ -138,7 +141,8 @@ def get_fields_inside(soup, existing_fields):
             ["kaucja", [int(word.replace(".", "")) for word in deposit.group(0).split() if word.replace(".", "").isdigit()][0]])
 
 
-def startFuture():
-    fetcher = Fetcher()
+def startFuture(root):
+    progressBar = ProgressBar(root, get_len_offers())
+    fetcher = Fetcher(progressBar)
     write_to_file(fetcher.get_offers('https://www.futurenieruchomosci.pl/lista-ofert?market=10') + fetcher.get_offers(
         'https://www.futurenieruchomosci.pl/lista-ofert?searchIndex=1&sort=add_date_desc&market=11'))

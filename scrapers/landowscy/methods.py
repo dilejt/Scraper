@@ -28,11 +28,9 @@ def searchOffers(url):
         searchOffers(url)
 
 
-def processOffers():
-    counter = 0
+def processOffers(progressBar):
     for url in urls:
-        print(counter)
-        counter += 1
+        progressBar.progress()
         checkOffer(url)
 
 
@@ -89,7 +87,7 @@ def checkOffer(url):
                 value = dictionaryTable[key].replace('m2', '').replace(' ', '').replace(',', '.').replace('\xa0', '')
             offer[fieldNamesDict[key]] = value
     photoName = (offer['nr_oferty'] + '.jpg').replace('/', '-')
-    offer['zdjecie_glowne'] = photoName
+    offer['zdjecie_glowne'] = "https://media-exp1.licdn.com/dms/image/C4E03AQFMPj8-9G5OMw/profile-displayphoto-shrink_800_800/0/1615199357371?e=1657152000&v=beta&t=-eoAtKig0CBQTrviX46OUlPAkjtmH8mmZpE8w-e7PdU"
     if 'balkon' in description:
         offer['balkon'] = True
     if 'piwnica' in description:
@@ -108,5 +106,4 @@ def checkOffer(url):
 def generateCsvFile(list, fieldNames):
     with open(getFileName(OFFICE_PROPERTY['landowscy']), WRITING_MODE, newline=NEWLINE, encoding=ENCODING) as csvFile:
         writer = csv.DictWriter(csvFile, delimiter=DELIMITER, fieldnames=fieldNames)
-        writer.writeheader()
         writer.writerows(list)
