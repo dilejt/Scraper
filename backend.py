@@ -117,15 +117,6 @@ def generateCsvFile(list):
 
 
 def checkForOldGlobalEstates():
-    if os.path.isfile(NEW_ESTATES_CSV):
-        os.rename(NEW_ESTATES_CSV, OLD_ESTATES_CSV)
-
-
-def updateOffers(root, loader):
-    createGlobalEstatesCsv()
-    offersList.clear()
-    filteredOferList.clear()
-    getListEstates()
-    loader.startLoading()
-    invalidateOffersFrame(root, loader)
-    invalidateNewOffersFrame(root, loader)
+    if os.path.isfile(OLD_ESTATES_CSV):
+        os.rmdir(OLD_ESTATES_CSV)
+    os.rename(NEW_ESTATES_CSV, OLD_ESTATES_CSV)
