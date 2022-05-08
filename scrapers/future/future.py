@@ -1,6 +1,7 @@
 import datetime
 import re
 
+from backend import updateOffers
 from consts import HEADERS
 from progressBar import ProgressBar
 from scrapers.future.fields import FIELD_RELATIONS
@@ -141,8 +142,9 @@ def get_fields_inside(soup, existing_fields):
             ["kaucja", [int(word.replace(".", "")) for word in deposit.group(0).split() if word.replace(".", "").isdigit()][0]])
 
 
-def startFuture(root):
+def startFuture(root, loader):
     progressBar = ProgressBar(root, get_len_offers())
     fetcher = Fetcher(progressBar)
     write_to_file(fetcher.get_offers('https://www.futurenieruchomosci.pl/lista-ofert?market=10') + fetcher.get_offers(
         'https://www.futurenieruchomosci.pl/lista-ofert?searchIndex=1&sort=add_date_desc&market=11'))
+    updateOffers(root, loader)

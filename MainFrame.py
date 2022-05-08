@@ -135,7 +135,7 @@ class MainFrame:
         optionMenu.grid(column=0, row=0, sticky=N, padx=5, pady=5)
 
         generateBtn = Button(buttonFrame, text="Generuj", width=10,
-                             command=lambda: generateOnClickHandler(variable.get(), self.root))
+                             command=lambda: generateOnClickHandler(variable.get(), self.root, offersLoader))
         generateBtn.grid(column=0, row=1, sticky=N, padx=5, pady=5)
 
         mergeBtn = Button(buttonFrame, text="Łączenie", width=10)
