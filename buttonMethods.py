@@ -10,7 +10,7 @@ from backend import createGlobalEstatesCsv
 
 def generateOnClickHandler(officeName, root):
     if officeName == OFFICE_PROPERTY['landowscy']:
-        startLandowscy()
+        Thread(target=lambda: startLandowscy(root)).start()
     if officeName == OFFICE_PROPERTY['future']:
         Thread(target=lambda: startFuture(root)).start()
     if officeName == OFFICE_PROPERTY['level']:
