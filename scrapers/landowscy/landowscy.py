@@ -1,14 +1,13 @@
+from progressBar import ProgressBar
 from scrapers.landowscy.methods import searchOffers, processOffers, generateCsvFile
 from scrapers.landowscy.variables import offerList, subPageToScrap, urls
 from consts import HEADERS
 
 
-def startLandowscy():
-    print('Zapisuje oferty do tablicy')
+def startLandowscy(root):
+    urls.clear()
+    offerList.clear()
     searchOffers(subPageToScrap)
-    print('Mam do sprawdzenia: ' + str(len(urls)) + ' ofert')
-    print('Pobieram szczegoly ofert')
-    processOffers()
-    print('Zapisuje do pliku znalezione oferty')
+    progressBar = ProgressBar(root, len(urls))
+    processOffers(progressBar)
     generateCsvFile(offerList, HEADERS)
-    print('Koniec scrapowania biura: landowscy nieruchomosci')

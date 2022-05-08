@@ -28,11 +28,9 @@ def searchOffers(url):
         searchOffers(url)
 
 
-def processOffers():
-    counter = 0
+def processOffers(progressBar):
     for url in urls:
-        print(counter)
-        counter += 1
+        progressBar.progress()
         checkOffer(url)
 
 
