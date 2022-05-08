@@ -72,6 +72,7 @@ def checkOffer(url):
         'nazwa_biura': 'LANDOWSCY NIERUCHOMOŚCI',
         'data_skanowania': datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
         'zdjecie_glowne_link': urlDomain + mainPhotoUrl,
+        'zdjecie_glowne': urlDomain + mainPhotoUrl,
         'zdjecia_linki': photosUrl,
         'liczba_zdjec': len(photosUrl),
         'opis': description,
@@ -86,8 +87,6 @@ def checkOffer(url):
             if key == 'Powierzchnia' or key == 'Powierzchnia działki':
                 value = dictionaryTable[key].replace('m2', '').replace(' ', '').replace(',', '.').replace('\xa0', '')
             offer[fieldNamesDict[key]] = value
-    photoName = (offer['nr_oferty'] + '.jpg').replace('/', '-')
-    offer['zdjecie_glowne'] = "https://media-exp1.licdn.com/dms/image/C4E03AQFMPj8-9G5OMw/profile-displayphoto-shrink_800_800/0/1615199357371?e=1657152000&v=beta&t=-eoAtKig0CBQTrviX46OUlPAkjtmH8mmZpE8w-e7PdU"
     if 'balkon' in description:
         offer['balkon'] = True
     if 'piwnica' in description:
