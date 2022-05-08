@@ -4,7 +4,7 @@ from datetime import datetime
 from consts import *
 
 #  You have to specify absolute path the file
-def getArrayOfDictionariesFromCsv(path, dictionaries):
+def getArrayOfDictionariesFromCsv(path, dictionaries = []):
     # Check if the path exists
     if not os.path.exists(path):
         return []
