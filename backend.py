@@ -1,15 +1,14 @@
 import csv
+import os
 from datetime import datetime
-
 from consts import *
 
 #  You have to specify absolute path the file
-def getArrayOfDictionariesFromCsv(path):
+def getArrayOfDictionariesFromCsv(path, dictionaries):
     # Check if the path exists
     if not os.path.exists(path):
         return []
 
-    dictionaries = []
     with open(path, READ_MODE, newline=NEWLINE, encoding=ENCODING) as file:
         reader = csv.DictReader(file, fieldnames=HEADERS, delimiter=DELIMITER)
         for row in reader:
@@ -17,10 +16,12 @@ def getArrayOfDictionariesFromCsv(path):
 
     return dictionaries
 
-def getListEstates(filtersArray=None):
-    estates = getArrayOfDictionariesFromCsv(NEW_ESTATES_CSV)
 
-    return filterEstates(estates, filtersArray)
+def getListEstates():
+    getArrayOfDictionariesFromCsv(NEW_ESTATES_CSV, offersList)
+    getArrayOfDictionariesFromCsv(NEW_ESTATES_CSV, filteredOferList)
+    filterEstates(None)
+
 
 # Diff from oldGlobalEstates and newGlobalEstates
 def getListComparedEstates(filtersArray=None):
@@ -37,13 +38,31 @@ def getListComparedEstates(filtersArray=None):
 
     return filterEstates(distinctEstates, filtersArray)
 
-def filterEstates(estates, filtersArray):
-    # todo obsluga filtrów
-    if filtersArray is not None:
-        return estates
-    else:
-        return estates
 
+def filterEstates(filtersDict):
+    if filtersDict is not None:
+        filteredOferList.clear()
+        for offer in offersList:
+            shouldAppend = True
+            for filterKey in filtersDict:
+                if filterKeyDict['type'] == filterKey:
+                    if filtersDict[filterKey].lower() not in offer['typ'].lower():
+                        shouldAppend = False
+                if filterKeyDict['priceMin'] == filterKey:
+                    if float(filtersDict[filterKey]) >= float(offer['cena'].replace('zł', '').replace(' ', '').replace(',', '.')):
+                        shouldAppend = False
+                if filterKeyDict['priceMax'] == filterKey:
+                    if filtersDict[filterKey] != '':
+                        if float(filtersDict[filterKey]) <= float(offer['cena'].replace('zł', '').replace(' ', '').replace(',', '.')):
+                            shouldAppend = False
+                if filterKeyDict['market'] == filterKey:
+                    if filtersDict[filterKey].lower() not in offer['rynek'].lower():
+                        shouldAppend = False
+                if filterKeyDict['office'] == filterKey:
+                    if filtersDict[filterKey].lower() not in offer['nazwa_biura'].replace(' ', '').lower() and filtersDict[filterKey] != 'WSZYSTKIE':
+                        shouldAppend = False
+            if shouldAppend:
+                filteredOferList.append(offer)
 # ------------------------------------------------------------------------ #
 
 def createGlobalEstatesCsv():
