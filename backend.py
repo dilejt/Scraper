@@ -1,6 +1,4 @@
 import csv
-import os
-
 from consts import *
 from mainFrameMethods import invalidateOffersFrame, invalidateNewOffersFrame
 
@@ -37,20 +35,19 @@ def getListComparedEstates(distinctEstates):
 
     if not os.path.isfile(OLD_ESTATES_CSV):
         getArrayOfDictionariesFromCsv(NEW_ESTATES_CSV, newOfferList)
-        return filterEstates(None)
+        return None
     newEstates = []
     getArrayOfDictionariesFromCsv(NEW_ESTATES_CSV, newEstates)
     for newEstate in newEstates:
         if not list(filter(lambda estate: estate['nr_oferty'] == newEstate['nr_oferty'], oldEstates)):
             distinctEstates.append(newEstate)
 
-    return filterEstates(None)
+    return None
 
 
-def filterEstates(filtersDict):
+def filterEstates(filtersDict, mainArray, filteredArray):
     if filtersDict is not None:
-        filteredOferList.clear()
-        for offer in offersList:
+        for offer in mainArray:
             shouldAppend = True
             for filterKey in filtersDict:
                 if filterKeyDict['type'] == filterKey:
@@ -73,7 +70,7 @@ def filterEstates(filtersDict):
                             filtersDict[filterKey] != 'WSZYSTKIE':
                         shouldAppend = False
             if shouldAppend:
-                filteredOferList.append(offer)
+                filteredArray.append(offer)
 
 
 # ------------------------------------------------------------------------ #
