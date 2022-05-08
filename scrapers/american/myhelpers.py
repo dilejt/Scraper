@@ -92,3 +92,15 @@ FIELD_NAMES = {
     'data_dodania_oferty': 'data_dodania_oferty',
     'data_skanowania': 'data_skanowania',
 }
+
+APARTMENT = 'mieszkania'
+HOUSE = 'domy'
+PLOT = 'dzialki'
+LOCAL = 'lokale'
+
+TYPES = {
+    APARTMENT: 'mieszkanie',
+    HOUSE: 'dom',
+    PLOT: 'dzialka',
+    LOCAL: 'lokal',
+}
