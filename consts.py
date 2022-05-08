@@ -3,6 +3,8 @@ from pathlib import Path
 
 offersList = []
 filteredOferList = []
+newOfferList = []
+newFilteredOfferList = []
 
 OFFICE_PROPERTY = {'landowscy': 'LANDOWSCY', 'future': 'FUTURE', 'level': 'LEVEL', 'investor': 'Investor', 'american': 'AmericanHome'}
 

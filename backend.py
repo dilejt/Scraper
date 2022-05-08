@@ -1,6 +1,6 @@
 import csv
 from consts import *
-from mainFrameMethods import invalidateOffersFrame
+from mainFrameMethods import invalidateOffersFrame, invalidateNewOffersFrame
 
 
 def getArrayOfDictionariesFromCsv(path, dictionaries=[]):
@@ -19,23 +19,24 @@ def getArrayOfDictionariesFromCsv(path, dictionaries=[]):
 def getListEstates():
     getArrayOfDictionariesFromCsv(NEW_ESTATES_CSV, offersList)
     getArrayOfDictionariesFromCsv(NEW_ESTATES_CSV, filteredOferList)
-    filterEstates(None)
+    getListComparedEstates(newOfferList)
+    getListComparedEstates(newFilteredOfferList)
 
 
 # Diff from oldGlobalEstates and newGlobalEstates
-def getListComparedEstates(filtersArray=None):
-    newEstates = getArrayOfDictionariesFromCsv(NEW_ESTATES_CSV)
+def getListComparedEstates(distinctEstates = []):
     oldEstates = getArrayOfDictionariesFromCsv(OLD_ESTATES_CSV)
 
-    distinctEstates = []
     if not os.path.isfile(OLD_ESTATES_CSV):
-        return filterEstates(newEstates, filtersArray)
-
+        getArrayOfDictionariesFromCsv(NEW_ESTATES_CSV, newOfferList)
+        return filterEstates(None)
+    newEstates = getArrayOfDictionariesFromCsv(NEW_ESTATES_CSV)
     for newEstate in newEstates:
         if not list(filter(lambda estate: estate['nr_oferty'] == newEstate['nr_oferty'], oldEstates)):
+            print('siema')
             distinctEstates.append(newEstate)
 
-    return filterEstates(distinctEstates, filtersArray)
+    return filterEstates(None)
 
 
 def filterEstates(filtersDict):
@@ -125,4 +126,6 @@ def updateOffers(root, loader):
     offersList.clear()
     filteredOferList.clear()
     getListEstates()
+    loader.startLoading()
     invalidateOffersFrame(root, loader)
+    invalidateNewOffersFrame(root, loader)

@@ -5,7 +5,7 @@ from io import BytesIO
 from ScrollbarFrame import ScrollbarFrame
 from functools import partial
 import re
-from consts import filteredOferList, offersList
+from consts import filteredOferList, offersList, newFilteredOfferList
 from threading import Thread
 
 
@@ -85,5 +85,5 @@ def invalidateOffersFrame(container, loader):
 
 
 def invalidateNewOffersFrame(container, loader):
-    updatesTable = createList(container, offersList, loader)
+    updatesTable = createList(container, newFilteredOfferList, loader)
     updatesTable.grid(column=1, row=3, sticky=W, padx=5, pady=5)
