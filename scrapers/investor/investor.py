@@ -1,6 +1,8 @@
-from backend import createGlobalEstatesCsv
+from backend import createGlobalEstatesCsv, updateOffers
 from scrapers.investor.methods import synchronizeEstates
 
-def startInvestor(root):
+
+def startInvestor(root, loader):
     synchronizeEstates(root)
-    createGlobalEstatesCsv()
+    updateOffers(root, loader)
+

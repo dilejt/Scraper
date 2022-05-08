@@ -15,13 +15,13 @@ def generateOnClickHandler(officeName, root, loader):
     if officeName == OFFICE_PROPERTY['landowscy']:
         Thread(target=lambda: startLandowscy(root, loader)).start()
     if officeName == OFFICE_PROPERTY['future']:
-        Thread(target=lambda: startFuture(root)).start()
+        Thread(target=lambda: startFuture(root, loader)).start()
     if officeName == OFFICE_PROPERTY['level']:
-        startLevel()
+        startLevel(root, loader)
     if officeName == OFFICE_PROPERTY['american']:
-        Thread(target=lambda: startAmerican(root)).start()
+        Thread(target=lambda: startAmerican(root, loader)).start()
     if officeName == OFFICE_PROPERTY['investor']:
-        Thread(target=lambda: startInvestor(root)).start()
+        Thread(target=lambda: startInvestor(root, loader)).start()
 
 
 def filterOffers(container, loader, type, priceMin, priceMax, localization, market, office):

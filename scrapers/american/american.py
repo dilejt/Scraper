@@ -4,7 +4,7 @@ from datetime import date
 import re
 import csv
 
-from backend import createGlobalEstatesCsv
+from backend import createGlobalEstatesCsv, updateOffers
 from consts import OFFICE_PROPERTY, NEWLINE, WRITING_MODE, DELIMITER, ENCODING, HEADERS
 from progressBar import ProgressBar
 from scrapers.american.myhelpers import TEMP_ARR, TEMPLATE, LINKS, FIELD_NAMES, APARTMENT, PLOT, HOUSE, TYPES
@@ -125,7 +125,8 @@ class Searcher:
         self.saveToFile()
 
 
-def startAmerican(root):
+def startAmerican(root, loader):
     searcher = Searcher()
     searcher.run(root)
-    createGlobalEstatesCsv()
+    updateOffers(root, loader)
+
