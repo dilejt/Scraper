@@ -78,14 +78,15 @@ def getPages(self, url):
         pages.append(page.get('href'))
 
     firstPage = int("".join(re.findall(r'\d+', pages[0])))
-    lastPage = int("".join(re.findall(r'\d+', pages[-1])))
+    # lastPage = int("".join(re.findall(r'\d+', pages[-1])))
+    lastPage = int("".join(re.findall(r'\d+', pages[1])))
+
 
     pages = []
 
-    for page in range(firstPage, lastPage + 1):
+    for page in range(firstPage, lastPage):
         pages.append(url + "/page/" + str(page))
 
-    print(pages)
     pages.insert(0, url)
     print(pages)
 
