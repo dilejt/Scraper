@@ -1,10 +1,9 @@
 import csv
-import os
-from datetime import datetime
 from consts import *
+from mainFrameMethods import invalidateOffersFrame
 
-#  You have to specify absolute path the file
-def getArrayOfDictionariesFromCsv(path, dictionaries = []):
+
+def getArrayOfDictionariesFromCsv(path, dictionaries=[]):
     # Check if the path exists
     if not os.path.exists(path):
         return []
@@ -49,20 +48,25 @@ def filterEstates(filtersDict):
                     if filtersDict[filterKey].lower() not in offer['typ'].lower():
                         shouldAppend = False
                 if filterKeyDict['priceMin'] == filterKey:
-                    if float(filtersDict[filterKey]) >= float(offer['cena'].replace('zł', '').replace(' ', '').replace(',', '.')):
+                    if float(filtersDict[filterKey]) >= float(
+                            offer['cena'].replace('zł', '').replace(' ', '').replace(',', '.')):
                         shouldAppend = False
                 if filterKeyDict['priceMax'] == filterKey:
                     if filtersDict[filterKey] != '':
-                        if float(filtersDict[filterKey]) <= float(offer['cena'].replace('zł', '').replace(' ', '').replace(',', '.')):
+                        if float(filtersDict[filterKey]) <= float(
+                                offer['cena'].replace('zł', '').replace(' ', '').replace(',', '.')):
                             shouldAppend = False
                 if filterKeyDict['market'] == filterKey:
                     if filtersDict[filterKey].lower() not in offer['rynek'].lower():
                         shouldAppend = False
                 if filterKeyDict['office'] == filterKey:
-                    if filtersDict[filterKey].lower() not in offer['nazwa_biura'].replace(' ', '').lower() and filtersDict[filterKey] != 'WSZYSTKIE':
+                    if filtersDict[filterKey].lower() not in offer['nazwa_biura'].replace(' ', '').lower() and \
+                            filtersDict[filterKey] != 'WSZYSTKIE':
                         shouldAppend = False
             if shouldAppend:
                 filteredOferList.append(offer)
+
+
 # ------------------------------------------------------------------------ #
 
 def createGlobalEstatesCsv():
@@ -85,6 +89,7 @@ def createGlobalEstatesCsv():
 
     generateCsvFile(newGlobalEstates)
 
+
 def getNewestData(path):
     files = getNewestFile(path)
     if not files:
@@ -95,6 +100,7 @@ def getNewestData(path):
 
     return getArrayOfDictionariesFromCsv(file)
 
+
 def getNewestFile(path):
     if not os.path.exists(path):
         os.mkdir(path)
@@ -102,12 +108,21 @@ def getNewestFile(path):
     files = os.listdir(path)
     return [os.path.join(path, basename) for basename in files]
 
-def generateCsvFile(list):
 
+def generateCsvFile(list):
     with open(NEW_ESTATES_CSV, WRITING_MODE, newline=NEWLINE, encoding=ENCODING) as csvFile:
         writer = csv.DictWriter(csvFile, delimiter=DELIMITER, fieldnames=HEADERS)
         writer.writerows(list)
 
+
 def checkForOldGlobalEstates():
     if os.path.isfile(NEW_ESTATES_CSV):
         os.rename(NEW_ESTATES_CSV, OLD_ESTATES_CSV)
+
+
+def updateOffers(root, loader):
+    createGlobalEstatesCsv()
+    offersList.clear()
+    filteredOferList.clear()
+    getListEstates()
+    invalidateOffersFrame(root, loader)

@@ -11,9 +11,9 @@ from scrapers.landowscy.landowscy import startLandowscy
 from backend import filterEstates, createGlobalEstatesCsv, getArrayOfDictionariesFromCsv
 
 
-def generateOnClickHandler(officeName, root):
+def generateOnClickHandler(officeName, root, loader):
     if officeName == OFFICE_PROPERTY['landowscy']:
-        Thread(target=lambda: startLandowscy(root)).start()
+        Thread(target=lambda: startLandowscy(root, loader)).start()
     if officeName == OFFICE_PROPERTY['future']:
         Thread(target=lambda: startFuture(root)).start()
     if officeName == OFFICE_PROPERTY['level']:
@@ -22,7 +22,6 @@ def generateOnClickHandler(officeName, root):
         Thread(target=lambda: startAmerican(root)).start()
     if officeName == OFFICE_PROPERTY['investor']:
         startInvestor()
-    createGlobalEstatesCsv()
 
 
 def filterOffers(container, loader, type, priceMin, priceMax, localization, market, office):
