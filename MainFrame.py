@@ -110,7 +110,87 @@ class MainFrame:
         offersFilterFrame.grid(column=0, row=1, sticky=W, padx=5, pady=5)
 
         # grid(1,1) TODO
-        getListEstates()
+        newsFilterFrame = Frame(self.root)
+
+        newsTypeFrame = Frame(newsFilterFrame)
+        newsTypeFrame.pack(fill='x')
+
+        newsTypeLabel = Label(newsTypeFrame, text="Typ:", width="10", anchor="e")
+        newsTypeLabel.pack(side=LEFT, padx=5, pady=5)
+
+        newsTypeInput = Entry(newsTypeFrame, width=30)
+
+        newsTypeInput.pack(side=LEFT, padx=5, pady=5)
+
+        newsPriceFrame = Frame(newsFilterFrame)
+        newsPriceFrame.pack(fill='x')
+
+        newsPriceLabel = Label(newsPriceFrame, text="Cena:", width="10", anchor="e")
+        newsPriceLabel.pack(side=LEFT, padx=5, pady=5)
+
+        newsPriceLtInput = Entry(newsPriceFrame, width=5, validate="key")
+        newsPriceLtInput.pack(side=LEFT, padx=5, pady=5)
+        addValidateOnInput(newsPriceLtInput)
+
+        newsPriceSpaceLabel = Label(newsPriceFrame, text="zł -")
+        newsPriceSpaceLabel.pack(side=LEFT, padx=0, pady=5)
+
+        newsPriceGtInput = Entry(newsPriceFrame, width=5, validate="key")
+        newsPriceGtInput.pack(side=LEFT, padx=5, pady=5)
+        addValidateOnInput(newsPriceGtInput)
+
+        newsPriceEndingLabel = Label(newsPriceFrame, text="zł")
+        newsPriceEndingLabel.pack(side=LEFT, padx=0, pady=5)
+
+        newsLocalizationFrame = Frame(newsFilterFrame)
+        newsLocalizationFrame.pack(fill='x')
+
+        newsLocalizationLabel = Label(newsLocalizationFrame, text="Lokalizacja:", width="10", anchor="e")
+        newsLocalizationLabel.pack(side=LEFT, padx=5, pady=5)
+
+        newsLocalizationInput = Entry(newsLocalizationFrame, width=30)
+        newsLocalizationInput.pack(side=LEFT, padx=5, pady=5)
+
+        newsMarketFrame = Frame(newsFilterFrame)
+        newsMarketFrame.pack(fill='x')
+
+        newsAreaLabel = Label(newsMarketFrame, text="Rynek:", width="10", anchor="e")
+        newsAreaLabel.pack(side=LEFT, padx=5, pady=5)
+
+        newsMarketInput = Entry(newsMarketFrame, width=10)
+        newsMarketInput.pack(side=LEFT, padx=5, pady=5)
+
+        newsFilterFrame.grid(column=0, row=1, sticky=W, padx=5, pady=5)
+
+        newsOfficeFrame = Frame(newsFilterFrame)
+        newsOfficeFrame.pack(fill='x')
+
+        newsOfficeLabel = Label(newsOfficeFrame, text="Biuro:", width="10", anchor="e")
+        newsOfficeLabel.pack(side=LEFT, padx=5, pady=5)
+
+        newsOfficeVariable = StringVar(newsOfficeFrame)
+
+        newsOfficeDict = {'all': 'WSZYSTKIE'} | OFFICE_PROPERTY
+        newsOfficeVariable.set(newsOfficeDict['all'])
+        newsOfficeMenu = OptionMenu(newsOfficeFrame, newsOfficeVariable, *newsOfficeDict.values())
+
+        newsOfficeMenu.config(width=15)
+        newsOfficeMenu.pack(side=LEFT, padx=5, pady=5)
+
+        newsFilterBtn = Button(newsOfficeFrame, text="Filtruj", command=lambda: filterOffers(
+            self.root,
+            newsLoader,
+            newsTypeInput.get(),
+            newsPriceLtInput.get(),
+            newsPriceGtInput.get(),
+            newsLocalizationInput.get(),
+            newsMarketInput.get(),
+            newsOfficeVariable.get()
+        ))
+
+        newsFilterBtn.pack(side=RIGHT, padx=5, pady=5)
+
+        newsFilterFrame.grid(column=1, row=1, sticky=W, padx=5, pady=5)
 
         # grid(0,2)
         offersLoaderFrame = Frame(self.root)
@@ -118,8 +198,12 @@ class MainFrame:
         offersLoaderFrame.grid(column=0, row=2, sticky=N, padx=5, pady=5)
 
         # grid(1,2) TODO
+        newsLoaderFrame = Frame(self.root)
+        newsLoader = Loader(newsLoaderFrame)
+        newsLoaderFrame.grid(column=1, row=2, sticky=N, padx=5, pady=5)
 
         # grid(0,3)
+        getListEstates()
         invalidateOffersFrame(self.root, offersLoader)
 
         # grid(1,3)
