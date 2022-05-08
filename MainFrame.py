@@ -1,8 +1,9 @@
 from tkinter import *
-from consts import OFFICE_PROPERTY, filteredOferList, offersList
+from consts import OFFICE_PROPERTY
 from buttonMethods import generateOnClickHandler, filterOffers
-from backend import getListEstates, getListComparedEstates
-from mainFrameMethods import createList, addValidateOnInput, invalidateOffersFrame, invalidateNewOffersFrame
+from backend import getListEstates
+from loader import Loader
+from mainFrameMethods import addValidateOnInput, invalidateOffersFrame, invalidateNewOffersFrame
 
 
 class MainFrame:
@@ -18,12 +19,12 @@ class MainFrame:
         self.root.columnconfigure(2, weight=2)
 
         # grid(0,0)
-        offersLabel = Label(self.root, text="Oferty")
-        offersLabel.grid(column=0, row=0, sticky=W, padx=5, pady=5)
+        offersLabel = Label(self.root, text="Oferty", font=("Arial", 16))
+        offersLabel.grid(column=0, row=0, sticky=N, padx=5, pady=5)
 
         # grid(1,0)
-        offersLabel = Label(self.root, text="Aktualności")
-        offersLabel.grid(column=1, row=0, sticky=W, padx=5, pady=5)
+        offersLabel = Label(self.root, text="Aktualności", font=("Arial", 16))
+        offersLabel.grid(column=1, row=0, sticky=N, padx=5, pady=5)
 
         # grid(0,1)
         offersFilterFrame = Frame(self.root)
@@ -35,7 +36,6 @@ class MainFrame:
         offersTypeLabel.pack(side=LEFT, padx=5, pady=5)
 
         offersTypeInput = Entry(offersTypeFrame, width=30)
-
 
         offersTypeInput.pack(side=LEFT, padx=5, pady=5)
 
@@ -91,11 +91,12 @@ class MainFrame:
         offersOfficeVariable.set(offersOfficeDict['all'])
         offersOfficeMenu = OptionMenu(offersOfficeFrame, offersOfficeVariable, *offersOfficeDict.values())
 
-        offersOfficeMenu.config(width=7)
+        offersOfficeMenu.config(width=15)
         offersOfficeMenu.pack(side=LEFT, padx=5, pady=5)
 
         offersFilterBtn = Button(offersOfficeFrame, text="Filtruj", command=lambda: filterOffers(
             self.root,
+            offersLoader,
             offersTypeInput.get(),
             offersPriceLtInput.get(),
             offersPriceGtInput.get(),
@@ -109,22 +110,28 @@ class MainFrame:
         offersFilterFrame.grid(column=0, row=1, sticky=W, padx=5, pady=5)
 
         # grid(1,1) TODO
-
         getListEstates()
 
-        # grid(0,2) todo dodac jako 2 parametr zassane dane z global csv'ki
-        invalidateOffersFrame(self.root)
+        # grid(0,2)
+        offersLoaderFrame = Frame(self.root)
+        offersLoader = Loader(offersLoaderFrame)
+        offersLoaderFrame.grid(column=0, row=2, sticky=N, padx=5, pady=5)
 
-        # # grid(1,2)
-        invalidateNewOffersFrame(self.root)
+        # grid(1,2) TODO
 
-        # grid(2,2)
+        # grid(0,3)
+        invalidateOffersFrame(self.root, offersLoader)
+
+        # grid(1,3)
+        invalidateNewOffersFrame(self.root, offersLoader)
+
+        # grid(2,3)
         buttonFrame = Frame(self.root)
 
         variable = StringVar(buttonFrame)
         variable.set(OFFICE_PROPERTY['landowscy'])
         optionMenu = OptionMenu(buttonFrame, variable, *OFFICE_PROPERTY.values())
-        optionMenu.config(width=12)
+        optionMenu.config(width=14)
         optionMenu.grid(column=0, row=0, sticky=N, padx=5, pady=5)
 
         generateBtn = Button(buttonFrame, text="Generuj", width=10,
@@ -137,4 +144,4 @@ class MainFrame:
         filesBtn = Button(buttonFrame, text="Pliki...", width=10)
         filesBtn.grid(column=0, row=3, sticky=N, padx=5, pady=5)
 
-        buttonFrame.grid(column=2, row=2, sticky=N, padx=5, pady=5)
+        buttonFrame.grid(column=2, row=3, sticky=N, padx=5, pady=5)

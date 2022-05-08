@@ -47,17 +47,17 @@ def initExtraInformationGui(estate):
 
 
 # create list of estates
-def createList(container, estates):
+def createList(container, estates, loader):
     sFrame = ScrollbarFrame(container)
     frame = sFrame.scrolled_frame
     frame.columnconfigure(0, weight=1)
     frame.columnconfigure(1, weight=1)
     frame.columnconfigure(2, weight=3)
-    Thread(target=lambda: appendData(estates, frame)).start()
+    Thread(target=lambda: appendData(estates, frame, loader)).start()
     return sFrame
 
 
-def appendData(estates, frame):
+def appendData(estates, frame, loader):
     for id, estate in enumerate(estates):
         response = requests.get(estate.get('zdjecie_glowne'))
         try:
@@ -76,13 +76,14 @@ def appendData(estates, frame):
         Label(frame, text=estate.get('nr_oferty')).grid(column=4, row=id, sticky=N)
         action_with_arg = partial(initExtraInformationGui, estate)
         Button(frame, text="Zobacz", width=8, command=action_with_arg).grid(column=5, row=id, sticky=N)
+    loader.loaded()
 
 
-def invalidateOffersFrame(container):
-    offersTable = createList(container, filteredOferList)
-    offersTable.grid(column=0, row=2, sticky=W, padx=5, pady=5)
+def invalidateOffersFrame(container, loader):
+    offersTable = createList(container, filteredOferList, loader)
+    offersTable.grid(column=0, row=3, sticky=W, padx=5, pady=5)
 
 
-def invalidateNewOffersFrame(container):
-    updatesTable = createList(container, offersList)
-    updatesTable.grid(column=1, row=2, sticky=W, padx=5, pady=5)
+def invalidateNewOffersFrame(container, loader):
+    updatesTable = createList(container, offersList, loader)
+    updatesTable.grid(column=1, row=3, sticky=W, padx=5, pady=5)
