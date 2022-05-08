@@ -1,14 +1,17 @@
 from tkinter import W
+from tkinter.filedialog import askopenfilename
 
-from consts import OFFICE_PROPERTY, offersList, NEW_ESTATES_CSV, filteredOferList
+from consts import DELIMITER, ENCODING, NEWLINE, OFFICE_PROPERTY, ROOT_DIR, WRITING_MODE, offersList, NEW_ESTATES_CSV, filteredOferList
 from mainFrameMethods import createList, invalidateOffersFrame
 from threading import Thread
+from mergedCsvFrame import mergedCsvFrame
 from scrapers.future.future import startFuture
 from scrapers.american.american import startAmerican
 from scrapers.investor.investor import startInvestor
 from scrapers.level.level import startLevel
 from scrapers.landowscy.landowscy import startLandowscy
 from backend import filterEstates, createGlobalEstatesCsv, getArrayOfDictionariesFromCsv
+import pandas as pd
 
 
 def generateOnClickHandler(officeName, root, loader):
@@ -38,4 +41,21 @@ def filterOffers(container, loader, type, priceMin, priceMax, localization, mark
     }
     filterEstates(inputDict)
     invalidateOffersFrame(container, loader)
+
+def mergeChosenCsvOnClickHandler():
+    firstCsvFilename = askopenfilename()
+    secondCsvFilename = askopenfilename()
+    mergedCsvFrameClass = mergedCsvFrame()
+
+    if (firstCsvFilename.endswith("csv") and secondCsvFilename.endswith("csv")):
+        firstCsvFile = pd.read_csv(firstCsvFilename, header=None, engine='python', encoding=ENCODING, sep=DELIMITER)
+        secondCsvFile = pd.read_csv(secondCsvFilename, header=None, engine='python', encoding=ENCODING, sep=DELIMITER)
+
+        combined_csv = pd.concat([firstCsvFile, secondCsvFile])
+        combined_csv.to_csv( "combined_csv.csv", sep=DELIMITER, index=False, header=False)
+
+        mergedCsvFrameClass.showMergedCsvFiles()
+    else:
+        print("Wrong file/files was/were chosen. Choose .csv files to merge.")
+
 
