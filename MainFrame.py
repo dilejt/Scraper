@@ -2,7 +2,7 @@ from tkinter import *
 from consts import OFFICE_PROPERTY, filteredOferList, offersList
 from buttonMethods import generateOnClickHandler, filterOffers
 from backend import getListEstates, getListComparedEstates
-from mainFrameMethods import createList, addValidateOnInput
+from mainFrameMethods import createList, addValidateOnInput, invalidateOffersFrame, invalidateNewOffersFrame
 
 
 class MainFrame:
@@ -95,7 +95,6 @@ class MainFrame:
         offersOfficeMenu.pack(side=LEFT, padx=5, pady=5)
 
         offersFilterBtn = Button(offersOfficeFrame, text="Filtruj", command=lambda: filterOffers(
-            offersTable,
             self.root,
             offersTypeInput.get(),
             offersPriceLtInput.get(),
@@ -114,12 +113,10 @@ class MainFrame:
         getListEstates()
 
         # grid(0,2) todo dodac jako 2 parametr zassane dane z global csv'ki
-        offersTable = createList(self.root, filteredOferList)
-        offersTable.grid(column=0, row=2, sticky=W, padx=5, pady=5)
+        invalidateOffersFrame(self.root)
 
         # # grid(1,2)
-        updatesTable = createList(self.root, offersList)
-        updatesTable.grid(column=1, row=2, sticky=W, padx=5, pady=5)
+        invalidateNewOffersFrame(self.root)
 
         # grid(2,2)
         buttonFrame = Frame(self.root)

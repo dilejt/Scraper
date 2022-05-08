@@ -5,8 +5,8 @@ from io import BytesIO
 from ScrollbarFrame import ScrollbarFrame
 from functools import partial
 import re
-
-from consts import filteredOferList
+from consts import filteredOferList, offersList
+from threading import Thread
 
 
 def validate(string):
@@ -50,11 +50,14 @@ def initExtraInformationGui(estate):
 def createList(container, estates):
     sFrame = ScrollbarFrame(container)
     frame = sFrame.scrolled_frame
-
     frame.columnconfigure(0, weight=1)
     frame.columnconfigure(1, weight=1)
     frame.columnconfigure(2, weight=3)
+    Thread(target=lambda: appendData(estates, frame)).start()
+    return sFrame
 
+
+def appendData(estates, frame):
     for id, estate in enumerate(estates):
         response = requests.get(estate.get('zdjecie_glowne'))
         try:
@@ -74,11 +77,12 @@ def createList(container, estates):
         action_with_arg = partial(initExtraInformationGui, estate)
         Button(frame, text="Zobacz", width=8, command=action_with_arg).grid(column=5, row=id, sticky=N)
 
-    return sFrame
 
-
-def invalidateOffersFrame(frame, container):
-    for widget in frame.winfo_children():
-        widget.destroy()
+def invalidateOffersFrame(container):
     offersTable = createList(container, filteredOferList)
     offersTable.grid(column=0, row=2, sticky=W, padx=5, pady=5)
+
+
+def invalidateNewOffersFrame(container):
+    updatesTable = createList(container, offersList)
+    updatesTable.grid(column=1, row=2, sticky=W, padx=5, pady=5)

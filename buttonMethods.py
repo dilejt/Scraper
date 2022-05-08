@@ -25,7 +25,7 @@ def generateOnClickHandler(officeName, root):
     createGlobalEstatesCsv()
 
 
-def filterOffers(frame, container, type, priceMin, priceMax, localization, market, office):
+def filterOffers(container, type, priceMin, priceMax, localization, market, office):
     if priceMin == '':
         priceMin = 0
     inputDict = {
@@ -37,4 +37,5 @@ def filterOffers(frame, container, type, priceMin, priceMax, localization, marke
         'office': office,
     }
     filterEstates(inputDict)
-    invalidateOffersFrame(frame, container)
+    invalidateOffersFrame(container)
+
