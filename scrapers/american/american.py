@@ -1,4 +1,3 @@
-import sys
 import urllib.request
 from bs4 import BeautifulSoup
 from datetime import date
@@ -34,7 +33,7 @@ class Searcher:
         },
     }
 
-    def get_value(self, value):
+    def getValue(self, value):
         value = dict(zip(range(len(value)), value))
         if value.get(1):
             temp_text = str(value.get(1))
@@ -44,7 +43,7 @@ class Searcher:
         else:
             return str(value.get(0))
 
-    def find_values(self, offer, key, temp_arr):
+    def findValues(self, offer, key, temp_arr):
         temp = temp_arr.copy()
         r = urllib.request.urlopen(offer)
         soup = BeautifulSoup(r, "html.parser")
@@ -56,24 +55,24 @@ class Searcher:
         for values in soup.findAll('div', class_='area'):
             if values.strong.previous_sibling.find('<sup>'):
                 if 'Piętro' == values.strong.previous_sibling.get_text():
-                    if re.findall("(.*)/.", self.get_value(values.strong.contents)):
-                        temp['pietro'] = re.findall("(.*)/.", self.get_value(values.strong.contents))[0]
-                    if re.findall(".*/(.*)", self.get_value(values.strong.contents)):
-                        temp['budynek_pietra'] = re.findall(".*/(.*)", self.get_value(values.strong.contents))[0]
+                    if re.findall("(.*)/.", self.getValue(values.strong.contents)):
+                        temp['pietro'] = re.findall("(.*)/.", self.getValue(values.strong.contents))[0]
+                    if re.findall(".*/(.*)", self.getValue(values.strong.contents)):
+                        temp['budynek_pietra'] = re.findall(".*/(.*)", self.getValue(values.strong.contents))[0]
                 elif 'dzialka' == key and 'Powierzchnia' == values.strong.previous_sibling.get_text():
-                    temp['powierzchnia_dzialki'] = self.get_value(values.strong.contents)
+                    temp['powierzchnia_dzialki'] = self.getValue(values.strong.contents)
                 elif 'Cena' == values.strong.previous_sibling.get_text():
-                    temp['cena'] = ''.join(re.findall("(\d*\d)", self.get_value(values.strong.contents)))
+                    temp['cena'] = ''.join(re.findall("(\d*\d)", self.getValue(values.strong.contents)))
                 elif 'Numer oferty' == values.strong.previous_sibling.get_text():
-                    temp['numer_oferty'] = self.get_value(values.strong.contents)
-                    temp['nr_oferty'] = self.get_value(values.strong.contents)
+                    temp['numer_oferty'] = self.getValue(values.strong.contents)
+                    temp['nr_oferty'] = self.getValue(values.strong.contents)
                 elif values.strong.previous_sibling.get_text() in FIELD_NAMES:
-                    temp[FIELD_NAMES[values.strong.previous_sibling.get_text()]] = self.get_value(
+                    temp[FIELD_NAMES[values.strong.previous_sibling.get_text()]] = self.getValue(
                         values.strong.contents)
             else:
                 if values.strong.previous_sibling.previous_sibling + values.strong.previous_sibling.get_text() in FIELD_NAMES:
                     temp[FIELD_NAMES[
-                            values.strong.previous_sibling.previous_sibling + values.strong.previous_sibling.get_text()]] = self.get_value(
+                            values.strong.previous_sibling.previous_sibling + values.strong.previous_sibling.get_text()]] = self.getValue(
                         values.strong.contents)
 
         for values in soup.findAll('div', class_='tab-pane fade active in'):
@@ -94,45 +93,34 @@ class Searcher:
         self.progressBar.progress()
         return temp
 
-    def countpages(self):
+    def searchOffers(self):
         for link in LINKS:
+            if len(self.offers[TYPES[(link.split('/'))[4]]]['links']) >= 5:
+                continue
             r = urllib.request.urlopen(link)
             soup = BeautifulSoup(r, "html.parser", from_encoding="iso-8859-1")
-            for offer in soup.findAll('ul', class_='pagination pull-right'):
-                pages = offer.findAll('li')
-                self.offers[TYPES[(link.split('/'))[4]]]['count'] = len(pages)
-
-    def searchoffers(self):
-        for link in LINKS:
-            for i in range(1, self.offers[TYPES[(link.split('/'))[4]]]['count']):
-                if len(self.offers[TYPES[(link.split('/'))[4]]]['links']) >= 5:
+            for offer in soup.findAll('a', href=True):
+                if len(self.offers[TYPES[(link.split('/'))[4]]]['links']) == 5:
                     continue
-                r = urllib.request.urlopen(link + '?page=' + str(i))
-                soup = BeautifulSoup(r, "html.parser", from_encoding="iso-8859-1")
-                for offer in soup.findAll('a', href=True):
-                    if len(self.offers[TYPES[(link.split('/'))[4]]]['links']) == 5:
-                        continue
-                    if TEMPLATE in offer['href']:
-                        if offer['href'] not in self.offers[TYPES[(link.split('/'))[4]]]['links']:
-                            self.offers[TYPES[(link.split('/'))[4]]]['links'].append(offer['href'])
-            self.offers_len = self.offers_len + len(self.offers[TYPES[(link.split('/'))[4]]]['links'])
+                if TEMPLATE in offer['href']:
+                    if offer['href'] not in self.offers[TYPES[(link.split('/'))[4]]]['links']:
+                        self.offers[TYPES[(link.split('/'))[4]]]['links'].append(offer['href'])
 
-    def getoffers(self):
+    def getOffers(self):
         for key in self.offers.keys():
             for offer in self.offers[key]['links']:
-                self.result.append(self.find_values(offer, key, TEMP_ARR))
+                self.result.append(self.findValues(offer, key, TEMP_ARR))
 
-    def savetofile(self):
+    def saveToFile(self):
         with open(getFileName(OFFICE_PROPERTY['american']), WRITING_MODE, newline=NEWLINE, encoding=ENCODING) as f:
             writer = csv.DictWriter(f, delimiter=DELIMITER, fieldnames=HEADERS)
             writer.writerows(self.result)
 
     def run(self, root):
-        self.countpages()
-        self.searchoffers()
-        self.progressBar = ProgressBar(root, self.offers_len)
-        self.getoffers()
-        self.savetofile()
+        self.progressBar = ProgressBar(root, 20)
+        self.searchOffers()
+        self.getOffers()
+        self.saveToFile()
 
 
 def startAmerican(root):
