@@ -6,7 +6,10 @@ from consts import HEADERS
 
 
 def startLandowscy(root, loader):
-    searchOffers(subPageToScrap)
+    urls.clear()
+    offerList.clear()
+    offset = 0
+    searchOffers(subPageToScrap, offset)
     progressBar = ProgressBar(root, len(urls))
     processOffers(progressBar)
     generateCsvFile(offerList, HEADERS)

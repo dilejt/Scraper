@@ -45,5 +45,4 @@ fieldNamesDict = {
 urlDomain = 'https://landowscy-nieruchomosci.pl'
 urls = []
 offerList = []
-offset = 0
 subPageToScrap = '/lista-ofert/'
