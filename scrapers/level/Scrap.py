@@ -18,7 +18,7 @@ class PrepareRealEstates:
 
     def getData(self, url):
         self.url =  urllib2.urlopen(url)
-        self.soup = BeautifulSoup(self.url, features = "html5lib")
+        self.soup = BeautifulSoup(self.url, features="html5lib")
         pages = getPages(self, url)
         realEstateList = getRealEstateList(self, pages)
 

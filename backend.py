@@ -62,6 +62,9 @@ def filterEstates(filtersDict, mainArray, filteredArray):
                         if float(filtersDict[filterKey]) <= float(
                                 offer['cena'].replace('zł', '').replace(' ', '').replace(',', '.')):
                             shouldAppend = False
+                if filterKeyDict['localization'] == filterKey:
+                    if filtersDict[filterKey].lower() not in offer['lokalizacja'].lower():
+                        shouldAppend = False
                 if filterKeyDict['market'] == filterKey:
                     if filtersDict[filterKey].lower() not in offer['rynek'].lower():
                         shouldAppend = False
@@ -133,6 +136,8 @@ def updateOffers(root, loader):
     createGlobalEstatesCsv()
     offersList.clear()
     filteredOferList.clear()
+    newOfferList.clear()
+    newFilteredOfferList.clear()
     getListEstates()
     loader.startLoading()
     invalidateOffersFrame(root, loader)
