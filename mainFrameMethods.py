@@ -52,7 +52,10 @@ def createList(container, estates, loader):
     frame = sFrame.scrolled_frame
     frame.columnconfigure(0, weight=1)
     frame.columnconfigure(1, weight=1)
-    frame.columnconfigure(2, weight=3)
+    frame.columnconfigure(2, weight=1)
+    frame.columnconfigure(3, weight=1)
+    frame.columnconfigure(4, weight=3)
+
     Thread(target=lambda: appendData(estates, frame, loader)).start()
     return sFrame
 
@@ -68,14 +71,17 @@ def appendData(estates, frame, loader):
             photo.image = render
             photo.grid(column=0, row=id, columnspan=2, sticky=N)
         except:
-            print("temp img didn't find")
+            print("Temp img didn't find")
 
         # Associate img with label & alocate in grid
 
-        Label(frame, text=estate.get('typ')).grid(column=3, row=id, sticky=N)
-        Label(frame, text=estate.get('nr_oferty')).grid(column=4, row=id, sticky=N)
+        Label(frame, text=estate.get('typ')).grid(column=2, row=id, sticky=N)
+        Label(frame, text=estate.get('cena')).grid(column=3, row=id, sticky=N)
+        Label(frame, text=estate.get('lokalizacja')).grid(column=4, row=id, sticky=N)
+        Label(frame, text=estate.get('rynek')).grid(column=5, row=id, sticky=N)
+        Label(frame, text=estate.get('biuro')).grid(column=6, row=id, sticky=N)
         action_with_arg = partial(initExtraInformationGui, estate)
-        Button(frame, text="Zobacz", width=8, command=action_with_arg).grid(column=5, row=id, sticky=N)
+        Button(frame, text="Zobacz", width=8, command=action_with_arg).grid(column=7, row=id, sticky=N)
     loader.loaded()
 
 

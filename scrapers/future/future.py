@@ -79,7 +79,6 @@ class Fetcher:
                     result.append('-1')
                 else:
                     result.append([element[1] for element in existing_fields if element[0] == field][0])
-            print(result)
             page_result.append(result)
             self.progressBar.progress()
         self.result_dict += page_result
