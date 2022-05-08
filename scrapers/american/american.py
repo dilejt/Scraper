@@ -1,4 +1,3 @@
-import sys
 import urllib.request
 from bs4 import BeautifulSoup
 from datetime import date
@@ -94,28 +93,18 @@ class Searcher:
         self.progressBar.progress()
         return temp
 
-    def countpages(self):
-        for link in LINKS:
-            r = urllib.request.urlopen(link)
-            soup = BeautifulSoup(r, "html.parser", from_encoding="iso-8859-1")
-            for offer in soup.findAll('ul', class_='pagination pull-right'):
-                pages = offer.findAll('li')
-                self.offers[TYPES[(link.split('/'))[4]]]['count'] = len(pages)
-
     def searchoffers(self):
         for link in LINKS:
-            for i in range(1, self.offers[TYPES[(link.split('/'))[4]]]['count']):
-                if len(self.offers[TYPES[(link.split('/'))[4]]]['links']) >= 5:
+            if len(self.offers[TYPES[(link.split('/'))[4]]]['links']) >= 5:
+                continue
+            r = urllib.request.urlopen(link)
+            soup = BeautifulSoup(r, "html.parser", from_encoding="iso-8859-1")
+            for offer in soup.findAll('a', href=True):
+                if len(self.offers[TYPES[(link.split('/'))[4]]]['links']) == 5:
                     continue
-                r = urllib.request.urlopen(link + '?page=' + str(i))
-                soup = BeautifulSoup(r, "html.parser", from_encoding="iso-8859-1")
-                for offer in soup.findAll('a', href=True):
-                    if len(self.offers[TYPES[(link.split('/'))[4]]]['links']) == 5:
-                        continue
-                    if TEMPLATE in offer['href']:
-                        if offer['href'] not in self.offers[TYPES[(link.split('/'))[4]]]['links']:
-                            self.offers[TYPES[(link.split('/'))[4]]]['links'].append(offer['href'])
-            self.offers_len = self.offers_len + len(self.offers[TYPES[(link.split('/'))[4]]]['links'])
+                if TEMPLATE in offer['href']:
+                    if offer['href'] not in self.offers[TYPES[(link.split('/'))[4]]]['links']:
+                        self.offers[TYPES[(link.split('/'))[4]]]['links'].append(offer['href'])
 
     def getoffers(self):
         for key in self.offers.keys():
@@ -128,9 +117,8 @@ class Searcher:
             writer.writerows(self.result)
 
     def run(self, root):
-        self.countpages()
+        self.progressBar = ProgressBar(root, 20)
         self.searchoffers()
-        self.progressBar = ProgressBar(root, self.offers_len)
         self.getoffers()
         self.savetofile()
 
