@@ -1,14 +1,12 @@
-from tkinter import W
-
-from consts import OFFICE_PROPERTY, offersList, NEW_ESTATES_CSV, filteredOferList
-from mainFrameMethods import createList, invalidateOffersFrame
+from consts import OFFICE_PROPERTY, offersList, filteredOferList, newFilteredOfferList, newOfferList
+from mainFrameMethods import invalidateOffersFrame, invalidateNewOffersFrame
 from threading import Thread
 from scrapers.future.future import startFuture
 from scrapers.american.american import startAmerican
 from scrapers.investor.investor import startInvestor
 from scrapers.level.level import startLevel
 from scrapers.landowscy.landowscy import startLandowscy
-from backend import filterEstates, createGlobalEstatesCsv, getArrayOfDictionariesFromCsv
+from backend import filterEstates
 
 
 def generateOnClickHandler(officeName, root, loader):
@@ -24,7 +22,7 @@ def generateOnClickHandler(officeName, root, loader):
         Thread(target=lambda: startInvestor(root, loader)).start()
 
 
-def filterOffers(container, loader, type, priceMin, priceMax, localization, market, office):
+def filterOffers(container, loader, type, priceMin, priceMax, localization, market, office, filterType):
     loader.startLoading()
     if priceMin == '':
         priceMin = 0
@@ -36,6 +34,11 @@ def filterOffers(container, loader, type, priceMin, priceMax, localization, mark
         'market': market,
         'office': office,
     }
-    filterEstates(inputDict)
-    invalidateOffersFrame(container, loader)
-
+    if filterType == 'newOffers':
+        newFilteredOfferList.clear()
+        filterEstates(inputDict, newOfferList, newFilteredOfferList)
+        invalidateNewOffersFrame(container, loader)
+    else:
+        filteredOferList.clear()
+        filterEstates(inputDict, offersList, filteredOferList)
+        invalidateOffersFrame(container, loader)

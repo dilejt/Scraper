@@ -8,6 +8,7 @@ class Loader:
         self.startLoading()
 
     def startLoading(self):
+        self.loaded()
         self.isLoading = True
         offersLoaderLabel = Label(self.frame, text="Ładowanie...", width="10")
         offersLoaderLabel.pack()

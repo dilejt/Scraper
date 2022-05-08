@@ -102,7 +102,8 @@ class MainFrame:
             offersPriceGtInput.get(),
             offersLocalizationInput.get(),
             offersMarketInput.get(),
-            offersOfficeVariable.get()
+            offersOfficeVariable.get(),
+            'offers',
         ))
 
         offersFilterBtn.pack(side=RIGHT, padx=5, pady=5)
@@ -185,7 +186,8 @@ class MainFrame:
             newsPriceGtInput.get(),
             newsLocalizationInput.get(),
             newsMarketInput.get(),
-            newsOfficeVariable.get()
+            newsOfficeVariable.get(),
+            'newOffers',
         ))
 
         newsFilterBtn.pack(side=RIGHT, padx=5, pady=5)
