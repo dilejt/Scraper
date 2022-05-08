@@ -15,7 +15,7 @@ def generateOnClickHandler(officeName, root, loader):
     if officeName == OFFICE_PROPERTY['future']:
         Thread(target=lambda: startFuture(root, loader)).start()
     if officeName == OFFICE_PROPERTY['level']:
-        startLevel(root, loader)
+        Thread(target=lambda: startLevel(root, loader)).start()
     if officeName == OFFICE_PROPERTY['american']:
         Thread(target=lambda: startAmerican(root, loader)).start()
     if officeName == OFFICE_PROPERTY['investor']:
