@@ -1,4 +1,6 @@
 import csv
+import os
+
 from consts import *
 from mainFrameMethods import invalidateOffersFrame, invalidateNewOffersFrame
 
@@ -118,6 +120,8 @@ def generateCsvFile(list):
 
 def checkForOldGlobalEstates():
     if os.path.isfile(NEW_ESTATES_CSV):
+        if os.path.isfile(OLD_ESTATES_CSV):
+            os.remove(OLD_ESTATES_CSV)
         os.rename(NEW_ESTATES_CSV, OLD_ESTATES_CSV)
 
 

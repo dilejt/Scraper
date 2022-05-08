@@ -41,7 +41,7 @@ def synchronizeEstates(root):
     arrayUrls = processUrlContent(soup, host)
     dictionaryArray = []
     maxOffsetPagination = getMaxOffsetPagination(soup)
-    progressBar = ProgressBar(root, maxOffsetPagination-10)
+    progressBar = ProgressBar(root, 10)
 
     for url in arrayUrls:
         dataRow = processLinkEstate(url, host)
@@ -65,7 +65,7 @@ def saveToCsv(dictionaryArray):
 
 def getEstateInfoPagination(maxOffsetPagination, host, progressBar):
     dictionaryArrayNestedPages = []
-    for page in range(10, maxOffsetPagination-10, 10):
+    for page in range(10, 20, 10):
         for url in getPage(page, host):
             progressBar.progress()
             dataRow = processLinkEstate(url, host)
