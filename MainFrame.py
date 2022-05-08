@@ -1,8 +1,8 @@
 from tkinter import *
-from consts import OFFICE_PROPERTY
+from consts import OFFICE_PROPERTY, filteredOferList, offersList
 from buttonMethods import generateOnClickHandler, filterOffers
 from backend import getListEstates, getListComparedEstates
-from mainFrameMethods import createList, addValidateOnInput
+from mainFrameMethods import createList, addValidateOnInput, invalidateOffersFrame, invalidateNewOffersFrame
 
 
 class MainFrame:
@@ -35,6 +35,8 @@ class MainFrame:
         offersTypeLabel.pack(side=LEFT, padx=5, pady=5)
 
         offersTypeInput = Entry(offersTypeFrame, width=30)
+
+
         offersTypeInput.pack(side=LEFT, padx=5, pady=5)
 
         offersPriceFrame = Frame(offersFilterFrame)
@@ -43,16 +45,16 @@ class MainFrame:
         offersPriceLabel = Label(offersPriceFrame, text="Cena:", width="10", anchor="e")
         offersPriceLabel.pack(side=LEFT, padx=5, pady=5)
 
-        offersPriceGtInput = Entry(offersPriceFrame, width=5, validate="key")
-        offersPriceGtInput.pack(side=LEFT, padx=5, pady=5)
-        addValidateOnInput(offersPriceGtInput)
+        offersPriceLtInput = Entry(offersPriceFrame, width=5, validate="key")
+        offersPriceLtInput.pack(side=LEFT, padx=5, pady=5)
+        addValidateOnInput(offersPriceLtInput)
 
         offersPriceSpaceLabel = Label(offersPriceFrame, text="zł -")
         offersPriceSpaceLabel.pack(side=LEFT, padx=0, pady=5)
 
-        offersPriceLtInput = Entry(offersPriceFrame, width=5, validate="key")
-        offersPriceLtInput.pack(side=LEFT, padx=5, pady=5)
-        addValidateOnInput(offersPriceLtInput)
+        offersPriceGtInput = Entry(offersPriceFrame, width=5, validate="key")
+        offersPriceGtInput.pack(side=LEFT, padx=5, pady=5)
+        addValidateOnInput(offersPriceGtInput)
 
         offersPriceEndingLabel = Label(offersPriceFrame, text="zł")
         offersPriceEndingLabel.pack(side=LEFT, padx=0, pady=5)
@@ -66,15 +68,14 @@ class MainFrame:
         offersLocalizationInput = Entry(offersLocalizationFrame, width=30)
         offersLocalizationInput.pack(side=LEFT, padx=5, pady=5)
 
-        offersAreaFrame = Frame(offersFilterFrame)
-        offersAreaFrame.pack(fill='x')
+        offersMarketFrame = Frame(offersFilterFrame)
+        offersMarketFrame.pack(fill='x')
 
-        offersAreaLabel = Label(offersAreaFrame, text="Powierzchnia:", width="10", anchor="e")
+        offersAreaLabel = Label(offersMarketFrame, text="Rynek:", width="10", anchor="e")
         offersAreaLabel.pack(side=LEFT, padx=5, pady=5)
 
-        offersAreaInput = Entry(offersAreaFrame, width=10, validate="key")
-        offersAreaInput.pack(side=LEFT, padx=5, pady=5)
-        addValidateOnInput(offersAreaInput)
+        offersMarketInput = Entry(offersMarketFrame, width=10)
+        offersMarketInput.pack(side=LEFT, padx=5, pady=5)
 
         offersFilterFrame.grid(column=0, row=1, sticky=W, padx=5, pady=5)
 
@@ -85,25 +86,37 @@ class MainFrame:
         offersOfficeLabel.pack(side=LEFT, padx=5, pady=5)
 
         offersOfficeVariable = StringVar(offersOfficeFrame)
-        offersOfficeVariable.set("1")
-        offersOfficeMenu = OptionMenu(offersOfficeFrame, offersOfficeVariable, "1", "2", "3", "4", "5")
+
+        offersOfficeDict = {'all': 'WSZYSTKIE'} | OFFICE_PROPERTY
+        offersOfficeVariable.set(offersOfficeDict['all'])
+        offersOfficeMenu = OptionMenu(offersOfficeFrame, offersOfficeVariable, *offersOfficeDict.values())
+
         offersOfficeMenu.config(width=7)
         offersOfficeMenu.pack(side=LEFT, padx=5, pady=5)
 
-        offersFilterBtn = Button(offersOfficeFrame, text="Filtruj", command=lambda: filterOffers())
+        offersFilterBtn = Button(offersOfficeFrame, text="Filtruj", command=lambda: filterOffers(
+            self.root,
+            offersTypeInput.get(),
+            offersPriceLtInput.get(),
+            offersPriceGtInput.get(),
+            offersLocalizationInput.get(),
+            offersMarketInput.get(),
+            offersOfficeVariable.get()
+        ))
+
         offersFilterBtn.pack(side=RIGHT, padx=5, pady=5)
 
         offersFilterFrame.grid(column=0, row=1, sticky=W, padx=5, pady=5)
 
         # grid(1,1) TODO
 
-        # grid(0,2) todo dodac jako 2 parametr zassane dane z global csv'ki
-        offersTable = createList(self.root, getListEstates())
-        offersTable.grid(column=0, row=2, sticky=W, padx=5, pady=5)
+        getListEstates()
 
-        # grid(1,2)
-        updatesTable = createList(self.root, getListComparedEstates())
-        updatesTable.grid(column=1, row=2, sticky=W, padx=5, pady=5)
+        # grid(0,2) todo dodac jako 2 parametr zassane dane z global csv'ki
+        invalidateOffersFrame(self.root)
+
+        # # grid(1,2)
+        invalidateNewOffersFrame(self.root)
 
         # grid(2,2)
         buttonFrame = Frame(self.root)
