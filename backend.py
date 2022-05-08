@@ -5,7 +5,7 @@ from consts import *
 from mainFrameMethods import invalidateOffersFrame, invalidateNewOffersFrame
 
 
-def getArrayOfDictionariesFromCsv(path, dictionaries=[]):
+def getArrayOfDictionariesFromCsv(path, dictionaries):
     # Check if the path exists
     if not os.path.exists(path):
         return []
@@ -26,16 +26,17 @@ def getListEstates():
 
 
 # Diff from oldGlobalEstates and newGlobalEstates
-def getListComparedEstates(distinctEstates = []):
-    oldEstates = getArrayOfDictionariesFromCsv(OLD_ESTATES_CSV)
+def getListComparedEstates(distinctEstates):
+    oldEstates = []
+    getArrayOfDictionariesFromCsv(OLD_ESTATES_CSV, oldEstates)
 
     if not os.path.isfile(OLD_ESTATES_CSV):
         getArrayOfDictionariesFromCsv(NEW_ESTATES_CSV, newOfferList)
         return filterEstates(None)
-    newEstates = getArrayOfDictionariesFromCsv(NEW_ESTATES_CSV)
+    newEstates = []
+    getArrayOfDictionariesFromCsv(NEW_ESTATES_CSV, newEstates)
     for newEstate in newEstates:
         if not list(filter(lambda estate: estate['nr_oferty'] == newEstate['nr_oferty'], oldEstates)):
-            print('siema')
             distinctEstates.append(newEstate)
 
     return filterEstates(None)
@@ -94,6 +95,7 @@ def createGlobalEstatesCsv():
 
 
 def getNewestData(path):
+    array = []
     files = getNewestFile(path)
     if not files:
         # No data from scrapper
@@ -101,7 +103,7 @@ def getNewestData(path):
 
     file = sorted(files, key=os.path.getmtime, reverse=True)[0]
 
-    return getArrayOfDictionariesFromCsv(file)
+    return getArrayOfDictionariesFromCsv(file, array)
 
 
 def getNewestFile(path):
