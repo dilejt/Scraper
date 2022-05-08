@@ -1,7 +1,9 @@
 import os
 from pathlib import Path
 
-# przyklad poslugiwania sie dict: OFFICE_PROPERTY['landowscy'] wyswietli: 'LANDOWSCY'
+offersList = []
+filteredOferList = []
+
 OFFICE_PROPERTY = {'landowscy': 'LANDOWSCY', 'future': 'FUTURE', 'level': 'LEVEL', 'investor': 'Investor', 'american': 'AmericanHome'}
 
 DIRECTORY_TO_SAVE_CSV = 'data'
@@ -66,3 +68,12 @@ HEADERS = [
     'data_dodania_oferty',
     'data_skanowania'
 ]
+
+filterKeyDict = {
+    'type': 'type',
+    'priceMin': 'priceMin',
+    'priceMax': 'priceMax',
+    'localization': 'localization',
+    'market': 'market',
+    'office': 'office',
+}
