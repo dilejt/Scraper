@@ -48,7 +48,7 @@ class Fetcher:
             if carousel is None:
                 existing_fields.append(["liczba_zdjec", "1"])
                 existing_fields.append(["zdjecia_linki", link])
-                # existing_fields.append(["zdjecie_glowne", get_as_base64(link)])
+                existing_fields.append(["zdjecie_glowne", link])
                 existing_fields.append(["zdjecie_glowne_link", link])
             else:
                 existing_fields.append(["liczba_zdjec", len(carousel.select('.item'))])
