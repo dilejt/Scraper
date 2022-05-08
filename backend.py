@@ -1,19 +1,22 @@
 import csv
-import os
-
 from consts import *
 from mainFrameMethods import invalidateOffersFrame, invalidateNewOffersFrame
 
 
-def getArrayOfDictionariesFromCsv(path, dictionaries=[]):
+def getArrayOfDictionariesFromCsv(path, dictionaries):
     # Check if the path exists
     if not os.path.exists(path):
         return []
-
-    with open(path, READ_MODE, newline=NEWLINE, encoding=ENCODING) as file:
-        reader = csv.DictReader(file, fieldnames=HEADERS, delimiter=DELIMITER)
-        for row in reader:
-            dictionaries.append(row)
+    if "FUTURE" in path:
+        with open(path, READ_MODE, newline=NEWLINE, encoding=None, errors='ignore') as file:
+            reader = csv.DictReader(file, fieldnames=HEADERS, delimiter=DELIMITER)
+            for row in reader:
+                dictionaries.append(row)
+    else:
+        with open(path, READ_MODE, newline=NEWLINE, encoding=ENCODING, errors='ignore') as file:
+            reader = csv.DictReader(file, fieldnames=HEADERS, delimiter=DELIMITER)
+            for row in reader:
+                dictionaries.append(row)
 
     return dictionaries
 
@@ -26,25 +29,25 @@ def getListEstates():
 
 
 # Diff from oldGlobalEstates and newGlobalEstates
-def getListComparedEstates(distinctEstates = []):
-    oldEstates = getArrayOfDictionariesFromCsv(OLD_ESTATES_CSV)
+def getListComparedEstates(distinctEstates):
+    oldEstates = []
+    getArrayOfDictionariesFromCsv(OLD_ESTATES_CSV, oldEstates)
 
     if not os.path.isfile(OLD_ESTATES_CSV):
         getArrayOfDictionariesFromCsv(NEW_ESTATES_CSV, newOfferList)
-        return filterEstates(None)
-    newEstates = getArrayOfDictionariesFromCsv(NEW_ESTATES_CSV)
+        return None
+    newEstates = []
+    getArrayOfDictionariesFromCsv(NEW_ESTATES_CSV, newEstates)
     for newEstate in newEstates:
         if not list(filter(lambda estate: estate['nr_oferty'] == newEstate['nr_oferty'], oldEstates)):
-            print('siema')
             distinctEstates.append(newEstate)
 
-    return filterEstates(None)
+    return None
 
 
-def filterEstates(filtersDict):
+def filterEstates(filtersDict, mainArray, filteredArray):
     if filtersDict is not None:
-        filteredOferList.clear()
-        for offer in offersList:
+        for offer in mainArray:
             shouldAppend = True
             for filterKey in filtersDict:
                 if filterKeyDict['type'] == filterKey:
@@ -59,6 +62,9 @@ def filterEstates(filtersDict):
                         if float(filtersDict[filterKey]) <= float(
                                 offer['cena'].replace('zł', '').replace(' ', '').replace(',', '.')):
                             shouldAppend = False
+                if filterKeyDict['localization'] == filterKey:
+                    if filtersDict[filterKey].lower() not in offer['lokalizacja'].lower():
+                        shouldAppend = False
                 if filterKeyDict['market'] == filterKey:
                     if filtersDict[filterKey].lower() not in offer['rynek'].lower():
                         shouldAppend = False
@@ -67,7 +73,7 @@ def filterEstates(filtersDict):
                             filtersDict[filterKey] != 'WSZYSTKIE':
                         shouldAppend = False
             if shouldAppend:
-                filteredOferList.append(offer)
+                filteredArray.append(offer)
 
 
 # ------------------------------------------------------------------------ #
@@ -94,6 +100,7 @@ def createGlobalEstatesCsv():
 
 
 def getNewestData(path):
+    array = []
     files = getNewestFile(path)
     if not files:
         # No data from scrapper
@@ -101,7 +108,7 @@ def getNewestData(path):
 
     file = sorted(files, key=os.path.getmtime, reverse=True)[0]
 
-    return getArrayOfDictionariesFromCsv(file)
+    return getArrayOfDictionariesFromCsv(file, array)
 
 
 def getNewestFile(path):
@@ -129,6 +136,8 @@ def updateOffers(root, loader):
     createGlobalEstatesCsv()
     offersList.clear()
     filteredOferList.clear()
+    newOfferList.clear()
+    newFilteredOfferList.clear()
     getListEstates()
     loader.startLoading()
     invalidateOffersFrame(root, loader)

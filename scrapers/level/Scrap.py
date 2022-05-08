@@ -18,17 +18,19 @@ class PrepareRealEstates:
 
     def getData(self, url):
         self.url =  urllib2.urlopen(url)
-        self.soup = BeautifulSoup(self.url, features = "html5lib")
+        self.soup = BeautifulSoup(self.url, features="html5lib")
         pages = getPages(self, url)
         realEstateList = getRealEstateList(self, pages)
 
         return realEstateList
 
 class RealEstateProperties:
-    def getProperties(self, realEstatesList, fields):
+    def getProperties(self, realEstatesList, fields, progressBar):
         self.realEstatesList = realEstatesList
         self.fields = fields
+        self.progressBar = progressBar
         print("Getting sites properties...")
+        nr_oferty = 0
 
         for realEstate in self.realEstatesList:
             self.url = urllib2.urlopen(realEstate)
@@ -41,6 +43,8 @@ class RealEstateProperties:
                 gallery += i.get('href') + ","
                 imageCounter += 1
             
+            nr_oferty = nr_oferty + 1
+
             if (textPropertyArray[5] != -1):
                 fetchedFields = {
                     "typ" : textPropertyArray[0],
@@ -62,6 +66,8 @@ class RealEstateProperties:
                     "data_skanowania" : scanDate
                 }
             appendArray.append(overwriteFields(self, fetchedFields, fields).copy())
+            print(nr_oferty)
+            self.progressBar.progress()
 
         saveToFile(self, appendArray)
 
@@ -71,14 +77,18 @@ def getPages(self, url):
     for page in self.soup.findAll('a', attrs = {'href': re.compile("page*")}):
         pages.append(page.get('href'))
 
-    firstPage = int("".join(re.findall(r'\d+', pages[1])))
-    lastPage = int("".join(re.findall(r'\d+', pages[-1])))
+    firstPage = int("".join(re.findall(r'\d+', pages[0])))
+    # lastPage = int("".join(re.findall(r'\d+', pages[-1])))
+    lastPage = int("".join(re.findall(r'\d+', pages[1])))
+
+
     pages = []
 
-    for page in range(firstPage, lastPage + 1):
+    for page in range(firstPage, lastPage):
         pages.append(url + "/page/" + str(page))
 
     pages.insert(0, url)
+    print(pages)
 
     return pages
 
@@ -93,7 +103,7 @@ def getRealEstateList(self, pages):
     return realEstates
 
 def getRealEstates(self, realEstates):
-    for realEstate in self.soup.findAll('a', limit = 2,  attrs = {'id': re.compile("card*")}):
+    for realEstate in self.soup.findAll('a', attrs = {'id': re.compile("card*")}):
         if realEstate not in realEstates:
             realEstates.append(realEstate.get('href'))
 

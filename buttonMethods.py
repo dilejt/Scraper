@@ -1,8 +1,8 @@
-from tkinter import W
 from tkinter.filedialog import askopenfilename
 
-from consts import DELIMITER, ENCODING, NEWLINE, OFFICE_PROPERTY, ROOT_DIR, WRITING_MODE, offersList, NEW_ESTATES_CSV, filteredOferList
-from mainFrameMethods import createList, invalidateOffersFrame
+import pandas as pd
+from consts import DELIMITER, ENCODING, OFFICE_PROPERTY, offersList, filteredOferList, newFilteredOfferList, newOfferList
+from mainFrameMethods import invalidateOffersFrame, invalidateNewOffersFrame
 from threading import Thread
 from mergedCsvFrame import mergedCsvFrame
 from scrapers.future.future import startFuture
@@ -10,8 +10,7 @@ from scrapers.american.american import startAmerican
 from scrapers.investor.investor import startInvestor
 from scrapers.level.level import startLevel
 from scrapers.landowscy.landowscy import startLandowscy
-from backend import filterEstates, createGlobalEstatesCsv, getArrayOfDictionariesFromCsv
-import pandas as pd
+from backend import filterEstates
 
 
 def generateOnClickHandler(officeName, root, loader):
@@ -20,14 +19,14 @@ def generateOnClickHandler(officeName, root, loader):
     if officeName == OFFICE_PROPERTY['future']:
         Thread(target=lambda: startFuture(root, loader)).start()
     if officeName == OFFICE_PROPERTY['level']:
-        startLevel(root, loader)
+        Thread(target=lambda: startLevel(root, loader)).start()
     if officeName == OFFICE_PROPERTY['american']:
         Thread(target=lambda: startAmerican(root, loader)).start()
     if officeName == OFFICE_PROPERTY['investor']:
         Thread(target=lambda: startInvestor(root, loader)).start()
 
 
-def filterOffers(container, loader, type, priceMin, priceMax, localization, market, office):
+def filterOffers(container, loader, type, priceMin, priceMax, localization, market, office, filterType):
     loader.startLoading()
     if priceMin == '':
         priceMin = 0
@@ -41,6 +40,15 @@ def filterOffers(container, loader, type, priceMin, priceMax, localization, mark
     }
     filterEstates(inputDict)
     invalidateOffersFrame(container, loader)
+
+    if filterType == 'newOffers':
+        newFilteredOfferList.clear()
+        filterEstates(inputDict, newOfferList, newFilteredOfferList)
+        invalidateNewOffersFrame(container, loader)
+    else:
+        filteredOferList.clear()
+        filterEstates(inputDict, offersList, filteredOferList)
+        invalidateOffersFrame(container, loader)
 
 def mergeChosenCsvOnClickHandler():
     firstCsvFilename = askopenfilename()
@@ -57,5 +65,3 @@ def mergeChosenCsvOnClickHandler():
         mergedCsvFrameClass.showMergedCsvFiles()
     else:
         print("Wrong file/files was/were chosen. Choose .csv files to merge.")
-
-

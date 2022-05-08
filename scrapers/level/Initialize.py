@@ -1,3 +1,6 @@
+import re
+from bs4 import BeautifulSoup
+import urllib.request as urllib2
 import scrapers.level.Scrap
 
 fields = {
@@ -45,11 +48,22 @@ fields = {
 }
 
 class LevelRealEstates:
-    def initGetLevelEstates():
+    def initGetLevelEstates(self, progressBar):
         print("start")
         Scrap = scrapers.level.Scrap
         getRealEstates = Scrap.PrepareRealEstates()
         getProp = Scrap.RealEstateProperties()
         url = "https://levelnieruchomosci.pl/nieruchomosci"
         realEstatesList = getRealEstates.getData(url)
-        realEstatesWithProperties = getProp.getProperties(realEstatesList, fields)
+        realEstatesWithProperties = getProp.getProperties(realEstatesList, fields, progressBar)
+
+    def getRealEstateNumber(self):
+        # url = urllib2.urlopen("https://levelnieruchomosci.pl/nieruchomosci")
+        # soup = BeautifulSoup(url, features = "html5lib")
+        # estateQuantity = soup.find("div", attrs={'class' : 'pull-right search_prop_calc'})
+        # number = estateQuantity.get_text().strip()
+        # estateQuantity = int(re.findall(r'\d+', number)[2])
+        # print(estateQuantity)
+        estateQuantity = 20
+
+        return estateQuantity

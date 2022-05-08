@@ -66,7 +66,7 @@ class Fetcher:
                 existing_fields.append(["lokalizacja", offer.select_one(".list-title:has(span)").get_text().strip()])
             # rynek
             if "market=10" in url:
-                existing_fields.append(["rynek", "piewotny"])
+                existing_fields.append(["rynek", "pierwotny"])
             elif "market=11" in url:
                 existing_fields.append(["rynek", "wtórny"])
             # nazwa_biura
@@ -79,7 +79,6 @@ class Fetcher:
                     result.append('-1')
                 else:
                     result.append([element[1] for element in existing_fields if element[0] == field][0])
-            print(result)
             page_result.append(result)
             self.progressBar.progress()
         self.result_dict += page_result

@@ -10,8 +10,7 @@ from helpers import getFileName
 from scrapers.landowscy.variables import *
 
 
-def searchOffers(url):
-    global offset
+def searchOffers(url, offset):
     htmlCode = urllib.request.urlopen(urlDomain + url + '/?offset=' + str(offset))
     soup = BeautifulSoup(htmlCode, 'html.parser', from_encoding="utf-8")
     numberOfOffers = soup.select_one(".search-count")
@@ -19,13 +18,13 @@ def searchOffers(url):
         urls.append(item['href'])
     # if offset < int(numberOfOffers.text) - 20:
     #     offset += 20
-    #     searchOffers(url)
+    #     searchOffers(url,offset)
     if offset < 20:
         offset += 20
-        searchOffers(url)
+        searchOffers(url, offset)
     # if offset < 0:
     #     offset += 20
-    #     searchOffers(url)
+    #     searchOffers(url, offset)
 
 
 def processOffers(progressBar):
