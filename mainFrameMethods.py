@@ -57,7 +57,7 @@ def initExtraInformationGui(estate):
             Label(root, text=header, anchor="w").grid(column=0, row=index + 2, sticky=N)
             Label(root, text=estate.get(header), anchor="w").grid(column=1, row=index + 2, sticky=N)
 
-    opis = Text(root, height=10, width=50)
+    opis = Text(root, height=10, width=50, wrap=WORD)
     opis.tag_configure('tag-center', justify='center')
     opis.grid(column=0, columnspan=2, row=index + 3, sticky=N)
     opis.insert(END, estate.get("opis"), 'tag-center')
