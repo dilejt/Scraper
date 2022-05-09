@@ -48,7 +48,7 @@ def initExtraInformationGui(estate):
 
 # create list of estates
 def createList(container, estates, loader):
-    sFrame = ScrollbarFrame(container)
+    sFrame = ScrollbarFrame(container, 650)
     frame = sFrame.scrolled_frame
     frame.columnconfigure(0, weight=1)
     frame.columnconfigure(1, weight=1)

@@ -6,7 +6,7 @@ class ScrollbarFrame(tk.Frame):
     This class is independent from the widgets to be scrolled and
     can be used to replace a standard tk.Frame
     """
-    def __init__(self, parent, **kwargs):
+    def __init__(self, parent, width, **kwargs):
         tk.Frame.__init__(self, parent, **kwargs)
 
         # The Scrollbar, layout to the right
@@ -14,7 +14,7 @@ class ScrollbarFrame(tk.Frame):
         vsb.pack(side="right", fill="y")
 
         # The Canvas which supports the Scrollbar Interface, layout to the left
-        self.canvas = tk.Canvas(self, borderwidth=0, background="#F0F0F0", width=650)
+        self.canvas = tk.Canvas(self, borderwidth=0, background="#F0F0F0", width=width)
         self.canvas.pack(side="left", fill="both", expand=True)
 
         # Bind the Scrollbar to the self.canvas Scrollbar Interface
