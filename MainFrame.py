@@ -1,5 +1,5 @@
 from tkinter import *
-from consts import OFFICE_PROPERTY
+from consts import OFFICE_PROPERTY, filteredOferList, newFilteredOfferList
 from buttonMethods import generateOnClickHandler, filterOffers
 from backend import getListEstates
 from loader import Loader
@@ -96,7 +96,7 @@ class MainFrame:
         offersOfficeMenu.pack(side=LEFT, padx=5, pady=5)
 
         offersFilterBtn = Button(offersOfficeFrame, text="Filtruj", command=lambda: filterOffers(
-            self,
+            self.root,
             offersLoader,
             offersTypeInput.get(),
             offersPriceLtInput.get(),
@@ -105,6 +105,7 @@ class MainFrame:
             offersMarketInput.get(),
             offersOfficeVariable.get(),
             'offers',
+            lambda: self.updateOfferLabel(),
         ))
 
         offersFilterBtn.pack(side=RIGHT, padx=5, pady=5)
@@ -180,7 +181,7 @@ class MainFrame:
         newsOfficeMenu.pack(side=LEFT, padx=5, pady=5)
 
         newsFilterBtn = Button(newsOfficeFrame, text="Filtruj", command=lambda: filterOffers(
-            self,
+            self.root,
             newsLoader,
             newsTypeInput.get(),
             newsPriceLtInput.get(),
@@ -189,6 +190,7 @@ class MainFrame:
             newsMarketInput.get(),
             newsOfficeVariable.get(),
             'newOffers',
+            lambda: self.updateNewOfferLabel()
         ))
 
         newsFilterBtn.pack(side=RIGHT, padx=5, pady=5)
@@ -200,13 +202,13 @@ class MainFrame:
         offersLoader = Loader(offersLoaderFrame)
         offersLoaderFrame.grid(column=0, row=2, sticky=N, padx=5, pady=5)
 
-        # grid(1,2) TODO
+        # grid(1,2)
         newsLoaderFrame = Frame(self.root)
         newsLoader = Loader(newsLoaderFrame)
         newsLoaderFrame.grid(column=1, row=2, sticky=N, padx=5, pady=5)
 
         # grid(0,3)
-        getListEstates(self)
+        getListEstates(lambda: self.updateOfferLabel(), lambda: self.updateNewOfferLabel())
         invalidateOffersFrame(self.root, offersLoader)
 
         # grid(1,3)
@@ -222,7 +224,13 @@ class MainFrame:
         optionMenu.grid(column=0, row=0, sticky=N, padx=5, pady=5)
 
         generateBtn = Button(buttonFrame, text="Generuj", width=10,
-                             command=lambda: generateOnClickHandler(variable.get(), self, offersLoader))
+                             command=lambda: generateOnClickHandler(
+                                 variable.get(),
+                                 self.root,
+                                 offersLoader,
+                                 lambda: self.updateOfferLabel(),
+                                 lambda: self.updateNewOfferLabel()
+                             ))
         generateBtn.grid(column=0, row=1, sticky=N, padx=5, pady=5)
 
         mergeBtn = Button(buttonFrame, text="Łączenie", width=10)
@@ -233,10 +241,10 @@ class MainFrame:
 
         buttonFrame.grid(column=2, row=3, sticky=N, padx=5, pady=5)
 
-    def setOfferLabel(self, numberOfOffers):
-        self.offersLabel['text'] = 'Oferty(' + str(numberOfOffers) + ')'
+    def updateOfferLabel(self):
+        self.offersLabel['text'] = 'Oferty(' + str(len(filteredOferList)) + ')'
         self.offersLabel.grid(column=0, row=0, sticky=N, padx=5, pady=5)
 
-    def setNewOfferLabel(self, numberOfOffers):
-        self.newOffersLabel['text'] = 'Aktualnosci(' + str(numberOfOffers) + ')'
+    def updateNewOfferLabel(self):
+        self.newOffersLabel['text'] = 'Aktualnosci(' + str(len(newFilteredOfferList)) + ')'
         self.newOffersLabel.grid(column=1, row=0, sticky=N, padx=5, pady=5)
