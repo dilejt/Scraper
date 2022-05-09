@@ -2,6 +2,7 @@ from tkinter import *
 from django.forms import Textarea
 from matplotlib.pyplot import acorr
 import requests
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from PIL import Image, ImageTk
 from io import BytesIO
 from ScrollbarFrame import ScrollbarFrame
@@ -9,6 +10,8 @@ from functools import partial
 import re
 from consts import filteredOferList, offersList, newFilteredOfferList
 from threading import Thread
+
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 
 def validate(string):
@@ -40,7 +43,8 @@ def initExtraInformationGui(estate):
     root.columnconfigure(0, weight=1)
     root.columnconfigure(1, weight=1)
     
-    response = requests.get(estate.get('zdjecie_glowne'))
+    response = requests.get(estate.get('zdjecie_glowne'), verify=False)
+    
     imgLoad = Image.open(BytesIO(response.content))
     imgLoad.thumbnail((512, 512), Image.ANTIALIAS)
     render = ImageTk.PhotoImage(imgLoad)
@@ -80,7 +84,7 @@ def createList(container, estates, loader):
 
 def appendData(estates, frame, loader):
     for id, estate in enumerate(estates):
-        response = requests.get(estate.get('zdjecie_glowne'))
+        response = requests.get(estate.get('zdjecie_glowne'), verify=False)
         try:
             imgLoad = Image.open(BytesIO(response.content))
             imgLoad.thumbnail((58, 58), Image.ANTIALIAS)

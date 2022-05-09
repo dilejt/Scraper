@@ -19,12 +19,12 @@ def searchOffers(url, offset):
     # if offset < int(numberOfOffers.text) - 20:
     #     offset += 20
     #     searchOffers(url,offset)
-    if offset < 20:
-        offset += 20
-        searchOffers(url, offset)
-    # if offset < 0:
+    # if offset < 20:
     #     offset += 20
     #     searchOffers(url, offset)
+    if offset < 0:
+        offset += 20
+        searchOffers(url, offset)
 
 
 def processOffers(progressBar):
