@@ -64,6 +64,52 @@ def initExtraInformationGui(estate):
     opis.config(state=DISABLED)
 
 
+def showPhotoViewer(estate):
+    root = Toplevel()
+    root.title("Zdjęcia")
+    root.currentIndex = 0
+    # windows only (remove the minimize/maximize button)
+    root.attributes('-toolwindow', True)
+    showPhoto(estate, root)
+
+    nextPhotoPartial = partial(nextPhoto, estate, root)
+    prevPhotoPartial = partial(prevPhoto, estate, root)
+    Button(root, text="Poprzednie", width=8, command=prevPhotoPartial).grid(column=0, row=1, sticky=N, pady=10)
+    Button(root, text="Nastepne", width=8, command=nextPhotoPartial).grid(column=2, row=1, sticky=N, pady=10)
+
+
+def showPhoto(estate, root):
+    photoArray = estate.get('zdjecia_linki').replace('[', '').split(',')
+    element = photoArray[root.currentIndex].replace("'", "")
+    response = requests.get(element, verify=False)
+    imgLoad = Image.open(BytesIO(response.content))
+    imgLoad.thumbnail((528, 528), Image.ANTIALIAS)
+    render = ImageTk.PhotoImage(imgLoad)
+
+    photo = Label(root, image=render)
+    photo.image = render
+    photo.grid(column=0, row=0, columnspan=3, sticky=N)
+    Label(root, text=str(root.currentIndex + 1) + '/' + str(len(photoArray) - 1)).grid(column=1, row=1, sticky=N, pady=10)
+
+
+def nextPhoto(estate, root):
+    photoArray = estate.get('zdjecia_linki').replace('[', '').split(',')
+    if root.currentIndex == len(photoArray) - 2:
+        root.currentIndex = 0
+    else:
+        root.currentIndex += 1
+    showPhoto(estate, root)
+
+
+def prevPhoto(estate, root):
+    photoArray = estate.get('zdjecia_linki').replace('[', '').split(',')
+    if root.currentIndex == 0:
+        root.currentIndex = len(photoArray) - 2
+    else:
+        root.currentIndex -= 1
+    showPhoto(estate, root)
+
+
 # create list of estates
 def createList(container, estates, loader):
     sFrame = ScrollbarFrame(container)
@@ -100,6 +146,10 @@ def appendData(estates, frame, loader):
         Label(frame, text=estate.get('biuro')).grid(column=6, row=id, sticky=N)
         action_with_arg = partial(initExtraInformationGui, estate)
         Button(frame, text="Zobacz", width=8, command=action_with_arg).grid(column=7, row=id, sticky=N)
+
+        showPhotoViewerPartial = partial(showPhotoViewer, estate)
+        if estate.get('zdjecia_linki') != '-1':
+            Button(frame, text="Zdjęcia", width=6, command=showPhotoViewerPartial).grid(column=8, row=id, sticky=N)
     loader.loaded()
 
 
