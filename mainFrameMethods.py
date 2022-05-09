@@ -61,6 +61,7 @@ def initExtraInformationGui(estate):
     opis.tag_configure('tag-center', justify='center')
     opis.grid(column=0, columnspan=2, row=index + 3, sticky=N)
     opis.insert(END, estate.get("opis"), 'tag-center')
+    opis.config(state=DISABLED)
 
 
 # create list of estates
