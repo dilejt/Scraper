@@ -3,8 +3,8 @@ from progressBar import ProgressBar
 from scrapers.level.Initialize import LevelRealEstates
 
 
-def startLevel(root, loader):
+def startLevel(self, loader):
     levelRealEstates = LevelRealEstates()
-    progressBar = ProgressBar(root, levelRealEstates.getRealEstateNumber())
+    progressBar = ProgressBar(self.root, levelRealEstates.getRealEstateNumber())
     levelRealEstates.initGetLevelEstates(progressBar)
-    updateOffers(root, loader)
+    updateOffers(self, loader)

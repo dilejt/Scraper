@@ -125,8 +125,8 @@ class Searcher:
         self.saveToFile()
 
 
-def startAmerican(root, loader):
+def startAmerican(self, loader):
     searcher = Searcher()
-    searcher.run(root)
-    updateOffers(root, loader)
+    searcher.run(self.root)
+    updateOffers(self, loader)
 

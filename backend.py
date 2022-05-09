@@ -21,11 +21,13 @@ def getArrayOfDictionariesFromCsv(path, dictionaries):
     return dictionaries
 
 
-def getListEstates():
+def getListEstates(self):
     getArrayOfDictionariesFromCsv(NEW_ESTATES_CSV, offersList)
     getArrayOfDictionariesFromCsv(NEW_ESTATES_CSV, filteredOferList)
+    self.setOfferLabel(len(filteredOferList))
     getListComparedEstates(newOfferList)
     getListComparedEstates(newFilteredOfferList)
+    self.setNewOfferLabel(len(newFilteredOfferList))
 
 
 # Diff from oldGlobalEstates and newGlobalEstates
@@ -132,13 +134,13 @@ def checkForOldGlobalEstates():
         os.rename(NEW_ESTATES_CSV, OLD_ESTATES_CSV)
 
 
-def updateOffers(root, loader):
+def updateOffers(self, loader):
     createGlobalEstatesCsv()
     offersList.clear()
     filteredOferList.clear()
     newOfferList.clear()
     newFilteredOfferList.clear()
-    getListEstates()
+    getListEstates(self)
     loader.startLoading()
-    invalidateOffersFrame(root, loader)
-    invalidateNewOffersFrame(root, loader)
+    invalidateOffersFrame(self.root, loader)
+    invalidateNewOffersFrame(self.root, loader)
