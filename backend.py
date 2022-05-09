@@ -8,7 +8,8 @@ from PIL import Image, ImageTk
 from io import BytesIO
 from ScrollbarFrame import ScrollbarFrame
 from consts import *
-from mainFrameMethods import invalidateOffersFrame, invalidateNewOffersFrame, createList, initExtraInformationGui
+from mainFrameMethods import invalidateOffersFrame, invalidateNewOffersFrame, createList, initExtraInformationGui, \
+    showPhotoViewer
 
 
 def getArrayOfDictionariesFromCsv(path, dictionaries):
@@ -215,4 +216,7 @@ def populateTable(frame,mergedFile):
         Label(frame, text=estate.get('rynek')).grid(column=5, row=id+1, sticky=N)
         Label(frame, text=estate.get('nazwa_biura')).grid(column=6, row=id+1, sticky=N)
         action_with_arg = partial(initExtraInformationGui, estate)
+        showPhotoViewerPartial = partial(showPhotoViewer, estate)
+        if estate.get('zdjecia_linki') != '-1':
+            tkinter.Button(frame, text="Zdjęcia", width=6, command=showPhotoViewerPartial).grid(column=7, row=id+1, sticky=N)
 
