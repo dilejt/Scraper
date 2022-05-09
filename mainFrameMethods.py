@@ -1,4 +1,6 @@
 from tkinter import *
+from django.forms import Textarea
+from matplotlib.pyplot import acorr
 import requests
 from PIL import Image, ImageTk
 from io import BytesIO
@@ -31,19 +33,35 @@ def addValidateOnInput(entry):
 # create window with additional estate data
 def initExtraInformationGui(estate):
     root = Toplevel()
-    root.title("nr oferty")
-
+    root.resizable(width=False, height=False)
+    root.title("Podgląd oferty")
     # windows only (remove the minimize/maximize button)
     root.attributes('-toolwindow', True)
-
+    root.columnconfigure(0, weight=1)
+    root.columnconfigure(1, weight=1)
+    
     response = requests.get(estate.get('zdjecie_glowne'))
     imgLoad = Image.open(BytesIO(response.content))
-    imgLoad.thumbnail((528, 528), Image.ANTIALIAS)
+    imgLoad.thumbnail((512, 512), Image.ANTIALIAS)
     render = ImageTk.PhotoImage(imgLoad)
 
     photo = Label(root, image=render)
     photo.image = render
     photo.grid(column=0, row=0, columnspan=2, sticky=N)
+    Label(root, text=estate.get("link")).grid(column=0, row=1, columnspan=2, sticky=N)
+    opis = Text(root, height=10, width=50)
+    opis.tag_configure('tag-center', justify='center')
+
+    colHeaders = enumerate(estate)
+    colHeaders = list(colHeaders)
+
+    for index, header in enumerate(estate):
+        if (estate.get(header) != "-1" and not header in ["opis", "zdjecie_glowne", "zdjecia_linki", "zdjecie_glowne_link", "link"]):
+            Label(root, text=header, anchor="w").grid(column=0, row=index + 2, sticky=N)
+            Label(root, text=estate.get(header), anchor="w").grid(column=1, row=index + 2, sticky=N)
+
+    opis.grid(column=0, columnspan=2, row=index + 3, sticky=N)
+    opis.insert(END, estate.get("opis"), 'tag-center')
 
 
 # create list of estates
