@@ -168,12 +168,14 @@ def mergeUniqueValues(files):
     with open(files[0], READ_MODE, newline=NEWLINE, encoding=ENCODING, errors='ignore') as f:
         reader = csv.DictReader(f, fieldnames=HEADERS, delimiter=DELIMITER)
         for row in reader:
+            row.pop('data_skanowania')
             mergedEstates.append(row)
     files.pop(0)
     for file in files:
         with open(file, READ_MODE, newline=NEWLINE, encoding=ENCODING, errors='ignore') as f:
             reader = csv.DictReader(f, fieldnames=HEADERS, delimiter=DELIMITER)
             for row in reader:
+                row.pop('data_skanowania')
                 if row not in mergedEstates:
                     mergedEstates.append(row)
     return mergedEstates
