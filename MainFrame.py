@@ -20,7 +20,7 @@ class MainFrame:
         self.root.columnconfigure(1, weight=5)
         self.root.columnconfigure(2, weight=2)
         # grid(0,0)
-        self.offersLabel = Label(self.root, text='Oferty', font=("Arial", 16))
+        self.offersLabel = Label(self.root, text="Oferty", font=("Arial", 16))
         self.offersLabel.grid(column=0, row=0, sticky=N, padx=5, pady=5)
 
         # grid(1,0)
