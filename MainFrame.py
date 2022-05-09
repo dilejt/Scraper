@@ -209,7 +209,7 @@ class MainFrame:
         invalidateOffersFrame(self.root, offersLoader)
 
         # grid(1,3)
-        invalidateNewOffersFrame(self.root, offersLoader)
+        invalidateNewOffersFrame(self.root, newsLoader)
 
         # grid(2,3)
         buttonFrame = Frame(self.root)
