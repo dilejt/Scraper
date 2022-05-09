@@ -150,8 +150,6 @@ def get_fields_inside(soup, existing_fields):
 def startFuture(root, loader):
     progressBar = ProgressBar(root, 20)
     fetcher = Fetcher(progressBar)
-    print("JAAAKKKK")
     write_to_file(fetcher.get_offers('https://www.futurenieruchomosci.pl/lista-ofert?market=10') + fetcher.get_offers(
         'https://www.futurenieruchomosci.pl/lista-ofert?searchIndex=1&sort=add_date_desc&market=11'))
-    print("COOOOO")
     updateOffers(root, loader)
