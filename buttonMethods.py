@@ -9,20 +9,20 @@ from scrapers.landowscy.landowscy import startLandowscy
 from backend import filterEstates
 
 
-def generateOnClickHandler(officeName, root, loader):
+def generateOnClickHandler(officeName, root, loader, updateOfferLabel, updateNewOffers):
     if officeName == OFFICE_PROPERTY['landowscy']:
-        Thread(target=lambda: startLandowscy(root, loader)).start()
+        Thread(target=lambda: startLandowscy(root, loader, updateOfferLabel, updateNewOffers)).start()
     if officeName == OFFICE_PROPERTY['future']:
-        Thread(target=lambda: startFuture(root, loader)).start()
+        Thread(target=lambda: startFuture(root, loader, updateOfferLabel, updateNewOffers)).start()
     if officeName == OFFICE_PROPERTY['level']:
-        Thread(target=lambda: startLevel(root, loader)).start()
+        Thread(target=lambda: startLevel(root, loader, updateOfferLabel, updateNewOffers)).start()
     if officeName == OFFICE_PROPERTY['american']:
-        Thread(target=lambda: startAmerican(root, loader)).start()
+        Thread(target=lambda: startAmerican(root, loader, updateOfferLabel, updateNewOffers)).start()
     if officeName == OFFICE_PROPERTY['investor']:
-        Thread(target=lambda: startInvestor(root, loader)).start()
+        Thread(target=lambda: startInvestor(root, loader, updateOfferLabel, updateNewOffers)).start()
 
 
-def filterOffers(container, loader, type, priceMin, priceMax, localization, market, office, filterType):
+def filterOffers(root, loader, type, priceMin, priceMax, localization, market, office, filterType, updateCounter):
     loader.startLoading()
     if priceMin == '':
         priceMin = 0
@@ -37,8 +37,10 @@ def filterOffers(container, loader, type, priceMin, priceMax, localization, mark
     if filterType == 'newOffers':
         newFilteredOfferList.clear()
         filterEstates(inputDict, newOfferList, newFilteredOfferList)
-        invalidateNewOffersFrame(container, loader)
+        invalidateNewOffersFrame(root, loader)
     else:
         filteredOferList.clear()
         filterEstates(inputDict, offersList, filteredOferList)
-        invalidateOffersFrame(container, loader)
+        invalidateOffersFrame(root, loader)
+    updateCounter()
+

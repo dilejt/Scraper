@@ -147,9 +147,9 @@ def get_fields_inside(soup, existing_fields):
             ["kaucja", [int(word.replace(".", "")) for word in deposit.group(0).split() if word.replace(".", "").isdigit()][0]])
 
 
-def startFuture(root, loader):
+def startFuture(root, loader, updateOfferLabel, updateNewOffers):
     progressBar = ProgressBar(root, 20)
     fetcher = Fetcher(progressBar)
     write_to_file(fetcher.get_offers('https://www.futurenieruchomosci.pl/lista-ofert?market=10') + fetcher.get_offers(
         'https://www.futurenieruchomosci.pl/lista-ofert?searchIndex=1&sort=add_date_desc&market=11'))
-    updateOffers(root, loader)
+    updateOffers(root, loader, updateOfferLabel, updateNewOffers)
