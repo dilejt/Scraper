@@ -13,6 +13,7 @@ class Fetcher:
     def __init__(self, progressBar):
         self.progressBar = progressBar
         self.result_dict = None
+        self.k = 0
 
     def get_offers(self, url):
         self.result_dict = []
@@ -29,6 +30,8 @@ class Fetcher:
             else:
                 next_url = next_page['href']
                 self.scrap_offer(next_url)
+            if self.k >= 20:
+                break
         return self.result_dict
 
     def scrap_offer(self, url):
@@ -81,6 +84,9 @@ class Fetcher:
                     result.append([element[1] for element in existing_fields if element[0] == field][0])
             page_result.append(result)
             self.progressBar.progress()
+            self.k += 1
+            if self.k >= 20:
+                break
         self.result_dict += page_result
 
 
@@ -141,9 +147,9 @@ def get_fields_inside(soup, existing_fields):
             ["kaucja", [int(word.replace(".", "")) for word in deposit.group(0).split() if word.replace(".", "").isdigit()][0]])
 
 
-def startFuture(root, loader):
-    progressBar = ProgressBar(root, get_len_offers())
+def startFuture(root, loader, updateOfferLabel, updateNewOffers):
+    progressBar = ProgressBar(root, 20)
     fetcher = Fetcher(progressBar)
     write_to_file(fetcher.get_offers('https://www.futurenieruchomosci.pl/lista-ofert?market=10') + fetcher.get_offers(
         'https://www.futurenieruchomosci.pl/lista-ofert?searchIndex=1&sort=add_date_desc&market=11'))
-    updateOffers(root, loader)
+    updateOffers(root, loader, updateOfferLabel, updateNewOffers)

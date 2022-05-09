@@ -5,7 +5,7 @@ from scrapers.landowscy.variables import offerList, subPageToScrap, urls
 from consts import HEADERS
 
 
-def startLandowscy(root, loader):
+def startLandowscy(root, loader, updateOfferLabel, updateNewOffers):
     urls.clear()
     offerList.clear()
     offset = 0
@@ -13,4 +13,4 @@ def startLandowscy(root, loader):
     progressBar = ProgressBar(root, len(urls))
     processOffers(progressBar)
     generateCsvFile(offerList, HEADERS)
-    updateOffers(root, loader)
+    updateOffers(root, loader, updateOfferLabel, updateNewOffers)

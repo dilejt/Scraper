@@ -49,7 +49,6 @@ class ProgressBar:
             self.stop()
 
     def stop(self):
-        self.progressbar.stop()
         self.newWindow.destroy()
 
     def updateInfo(self):
