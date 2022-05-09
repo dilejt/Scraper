@@ -91,7 +91,6 @@ class Searcher:
         temp['zdjecie_glowne_link'] = photos.split(',')[0]
         temp['liczba_zdjec'] = count_photos
         temp['data_skanowania'] = self.today.strftime("%d/%m/%Y")
-        print(temp)
         self.progressBar.progress()
         return temp
 

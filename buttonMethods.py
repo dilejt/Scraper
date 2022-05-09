@@ -58,7 +58,7 @@ def mergeFilesWithUniques(root):
             mergedEstates.append(i)
     window.destroy()
     mergedCsv = mergeUniqueValues(mergedEstates)
-    with open(ROOT_DIR + '\mergedData_' + str(datetime.now().strftime("%d-%m-%Y_%H-%M-%S")) + '.csv', WRITING_MODE, newline=NEWLINE, encoding=ENCODING) as f:
+    with open(ROOT_DIR + '\mergedData\mergedData_' + str(datetime.now().strftime("%d-%m-%Y_%H-%M-%S")) + '.csv', WRITING_MODE, newline=NEWLINE, encoding=ENCODING) as f:
         writer = csv.DictWriter(f, delimiter=DELIMITER, fieldnames=HEADERS)
         writer.writerows(mergedCsv)
     createTable(mergedCsv, root)
