@@ -1,6 +1,6 @@
 from tkinter import *
 from consts import OFFICE_PROPERTY, filteredOferList, newFilteredOfferList
-from buttonMethods import generateOnClickHandler, filterOffers
+from buttonMethods import generateOnClickHandler, filterOffers, mergeFilesWithUniques
 from backend import getListEstates
 from loader import Loader
 from mainFrameMethods import addValidateOnInput, invalidateOffersFrame, invalidateNewOffersFrame
@@ -233,11 +233,9 @@ class MainFrame:
                              ))
         generateBtn.grid(column=0, row=1, sticky=N, padx=5, pady=5)
 
-        mergeBtn = Button(buttonFrame, text="Łączenie", width=10)
+        mergeBtn = Button(buttonFrame, text="Łączenie", width=10,
+                          command=lambda: mergeFilesWithUniques(self.root))
         mergeBtn.grid(column=0, row=2, sticky=N, padx=5, pady=5)
-
-        filesBtn = Button(buttonFrame, text="Pliki...", width=10)
-        filesBtn.grid(column=0, row=3, sticky=N, padx=5, pady=5)
 
         buttonFrame.grid(column=2, row=3, sticky=N, padx=5, pady=5)
 

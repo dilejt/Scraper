@@ -1,6 +1,15 @@
 import csv
+import tkinter, tkinter.filedialog
+from functools import partial
+from threading import Thread
+from tkinter import messagebox, W, N, Label
+import requests
+from PIL import Image, ImageTk
+from io import BytesIO
+from ScrollbarFrame import ScrollbarFrame
 from consts import *
-from mainFrameMethods import invalidateOffersFrame, invalidateNewOffersFrame
+from mainFrameMethods import invalidateOffersFrame, invalidateNewOffersFrame, createList, initExtraInformationGui, \
+    showPhotoViewer
 
 
 def getArrayOfDictionariesFromCsv(path, dictionaries):
@@ -144,3 +153,70 @@ def updateOffers(root, loader, updateOfferLabel, updateNewOffers):
     loader.startLoading()
     invalidateOffersFrame(root, loader)
     invalidateNewOffersFrame(root, loader)
+
+def createMergeWindow(root):
+    newWindow = tkinter.Toplevel(root)
+    newWindow.withdraw()
+    newFrame = tkinter.Frame(newWindow)
+
+    files = tkinter.filedialog.askopenfilenames(parent=newFrame, title='Wybierz pliki')
+    msgbox = tkinter.messagebox.askquestion('Dodaj pliki', 'Czy chcesz dodać kolejne pliki?', icon='warning')
+    return list(files), msgbox, newWindow
+
+def mergeUniqueValues(files):
+    mergedEstates = []
+    with open(files[0], READ_MODE, newline=NEWLINE, encoding=ENCODING, errors='ignore') as f:
+        reader = csv.DictReader(f, fieldnames=HEADERS, delimiter=DELIMITER)
+        for row in reader:
+            mergedEstates.append(row)
+    files.pop(0)
+    for file in files:
+        with open(file, READ_MODE, newline=NEWLINE, encoding=ENCODING, errors='ignore') as f:
+            reader = csv.DictReader(f, fieldnames=HEADERS, delimiter=DELIMITER)
+            for row in reader:
+                if row not in mergedEstates:
+                    mergedEstates.append(row)
+    return mergedEstates
+
+def createTable(mergedEstates, root):
+    newWindow = tkinter.Toplevel(root)
+    sFrame = ScrollbarFrame(newWindow, 800)
+    frame = sFrame.scrolled_frame
+    frame.columnconfigure(0, weight=1)
+    frame.columnconfigure(1, weight=1)
+    frame.columnconfigure(2, weight=1)
+    frame.columnconfigure(3, weight=1)
+    frame.columnconfigure(4, weight=3)
+    Label(frame, text='typ').grid(column=2, row=0, sticky=N)
+    Label(frame, text='cena').grid(column=3, row=0, sticky=N)
+    Label(frame, text='lokalizacja').grid(column=4, row=0, sticky=N)
+    Label(frame, text='rynek').grid(column=5, row=0, sticky=N)
+    Label(frame, text='nazwa_biura').grid(column=6, row=0, sticky=N)
+    Thread(target=lambda: populateTable(frame, mergedEstates)).start()
+    sFrame.grid(column=0, row=3, sticky=W, padx=5, pady=5)
+
+def populateTable(frame,mergedFile):
+    for id, estate in enumerate(mergedFile):
+        response = requests.get(estate.get('zdjecie_glowne'))
+        try:
+            imgLoad = Image.open(BytesIO(response.content))
+            imgLoad.thumbnail((58, 58), Image.ANTIALIAS)
+            render = ImageTk.PhotoImage(imgLoad)
+            photo = tkinter.Label(frame, image=render)
+            photo.image = render
+            photo.grid(column=0, row=id+1, columnspan=2, sticky=N)
+        except:
+            print("Temp img didn't find")
+
+        # Associate img with label & alocate in grid
+
+        Label(frame, text=estate.get('typ')).grid(column=2, row=id+1, sticky=N)
+        Label(frame, text=estate.get('cena')).grid(column=3, row=id+1, sticky=N)
+        Label(frame, text=estate.get('lokalizacja')).grid(column=4, row=id+1, sticky=N)
+        Label(frame, text=estate.get('rynek')).grid(column=5, row=id+1, sticky=N)
+        Label(frame, text=estate.get('nazwa_biura')).grid(column=6, row=id+1, sticky=N)
+        action_with_arg = partial(initExtraInformationGui, estate)
+        showPhotoViewerPartial = partial(showPhotoViewer, estate)
+        if estate.get('zdjecia_linki') != '-1':
+            tkinter.Button(frame, text="Zdjęcia", width=6, command=showPhotoViewerPartial).grid(column=7, row=id+1, sticky=N)
+
