@@ -1,6 +1,6 @@
 from tkinter import *
 from consts import OFFICE_PROPERTY
-from buttonMethods import generateOnClickHandler, filterOffers
+from buttonMethods import generateOnClickHandler, filterOffers, mergeChosenCsvOnClickHandler
 from backend import getListEstates
 from loader import Loader
 from mainFrameMethods import addValidateOnInput, invalidateOffersFrame, invalidateNewOffersFrame
@@ -224,7 +224,8 @@ class MainFrame:
                              command=lambda: generateOnClickHandler(variable.get(), self.root, offersLoader))
         generateBtn.grid(column=0, row=1, sticky=N, padx=5, pady=5)
 
-        mergeBtn = Button(buttonFrame, text="Łączenie", width=10)
+        mergeBtn = Button(buttonFrame, text="Łączenie", width=10,
+                             command=lambda: mergeChosenCsvOnClickHandler())
         mergeBtn.grid(column=0, row=2, sticky=N, padx=5, pady=5)
 
         filesBtn = Button(buttonFrame, text="Pliki...", width=10)
