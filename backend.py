@@ -165,9 +165,11 @@ def createMergeWindow(root):
 
 def mergeUniqueValues(files):
     mergedEstates = []
+    scanned_data = []
     with open(files[0], READ_MODE, newline=NEWLINE, encoding=ENCODING, errors='ignore') as f:
         reader = csv.DictReader(f, fieldnames=HEADERS, delimiter=DELIMITER)
         for row in reader:
+            scanned_data.append(row['data_skanowania'])
             row.pop('data_skanowania')
             mergedEstates.append(row)
     files.pop(0)
@@ -175,9 +177,12 @@ def mergeUniqueValues(files):
         with open(file, READ_MODE, newline=NEWLINE, encoding=ENCODING, errors='ignore') as f:
             reader = csv.DictReader(f, fieldnames=HEADERS, delimiter=DELIMITER)
             for row in reader:
+                scanned_data.append(row['data_skanowania'])
                 row.pop('data_skanowania')
                 if row not in mergedEstates:
                     mergedEstates.append(row)
+    for i in range(len(mergedEstates)):
+        mergedEstates[i]['data_skanowania'] = scanned_data[i]
     return mergedEstates
 
 def createTable(mergedEstates, root):
@@ -210,15 +215,14 @@ def populateTable(frame,mergedFile):
         except:
             print("Temp img didn't find")
 
-        # Associate img with label & alocate in grid
-
         Label(frame, text=estate.get('typ')).grid(column=2, row=id+1, sticky=N)
         Label(frame, text=estate.get('cena')).grid(column=3, row=id+1, sticky=N)
         Label(frame, text=estate.get('lokalizacja')).grid(column=4, row=id+1, sticky=N)
         Label(frame, text=estate.get('rynek')).grid(column=5, row=id+1, sticky=N)
         Label(frame, text=estate.get('nazwa_biura')).grid(column=6, row=id+1, sticky=N)
         action_with_arg = partial(initExtraInformationGui, estate)
+        tkinter.Button(frame, text="Zobacz", width=8, command=action_with_arg).grid(column=7, row=id+1, sticky=N)
         showPhotoViewerPartial = partial(showPhotoViewer, estate)
         if estate.get('zdjecia_linki') != '-1':
-            tkinter.Button(frame, text="Zdjęcia", width=6, command=showPhotoViewerPartial).grid(column=7, row=id+1, sticky=N)
+            tkinter.Button(frame, text="Zdjęcia", width=6, command=showPhotoViewerPartial).grid(column=8, row=id+1, sticky=N)
 
