@@ -177,9 +177,10 @@ def mergeUniqueValues(files):
         with open(file, READ_MODE, newline=NEWLINE, encoding=ENCODING, errors='ignore') as f:
             reader = csv.DictReader(f, fieldnames=HEADERS, delimiter=DELIMITER)
             for row in reader:
-                scanned_data.append(row['data_skanowania'])
+                dataScanned = (row['data_skanowania'])
                 row.pop('data_skanowania')
                 if row not in mergedEstates:
+                    scanned_data.append(dataScanned)
                     mergedEstates.append(row)
     for i in range(len(mergedEstates)):
         mergedEstates[i]['data_skanowania'] = scanned_data[i]
