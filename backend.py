@@ -210,15 +210,14 @@ def populateTable(frame,mergedFile):
         except:
             print("Temp img didn't find")
 
-        # Associate img with label & alocate in grid
-
         Label(frame, text=estate.get('typ')).grid(column=2, row=id+1, sticky=N)
         Label(frame, text=estate.get('cena')).grid(column=3, row=id+1, sticky=N)
         Label(frame, text=estate.get('lokalizacja')).grid(column=4, row=id+1, sticky=N)
         Label(frame, text=estate.get('rynek')).grid(column=5, row=id+1, sticky=N)
         Label(frame, text=estate.get('nazwa_biura')).grid(column=6, row=id+1, sticky=N)
         action_with_arg = partial(initExtraInformationGui, estate)
+        tkinter.Button(frame, text="Zobacz", width=8, command=action_with_arg).grid(column=7, row=id+1, sticky=N)
         showPhotoViewerPartial = partial(showPhotoViewer, estate)
         if estate.get('zdjecia_linki') != '-1':
-            tkinter.Button(frame, text="Zdjęcia", width=6, command=showPhotoViewerPartial).grid(column=7, row=id+1, sticky=N)
+            tkinter.Button(frame, text="Zdjęcia", width=6, command=showPhotoViewerPartial).grid(column=8, row=id+1, sticky=N)
 
