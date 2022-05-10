@@ -165,9 +165,11 @@ def createMergeWindow(root):
 
 def mergeUniqueValues(files):
     mergedEstates = []
+    scanned_data = []
     with open(files[0], READ_MODE, newline=NEWLINE, encoding=ENCODING, errors='ignore') as f:
         reader = csv.DictReader(f, fieldnames=HEADERS, delimiter=DELIMITER)
         for row in reader:
+            scanned_data.append(row['data_skanowania'])
             row.pop('data_skanowania')
             mergedEstates.append(row)
     files.pop(0)
@@ -175,9 +177,12 @@ def mergeUniqueValues(files):
         with open(file, READ_MODE, newline=NEWLINE, encoding=ENCODING, errors='ignore') as f:
             reader = csv.DictReader(f, fieldnames=HEADERS, delimiter=DELIMITER)
             for row in reader:
+                scanned_data.append(row['data_skanowania'])
                 row.pop('data_skanowania')
                 if row not in mergedEstates:
                     mergedEstates.append(row)
+    for i in range(len(mergedEstates)):
+        mergedEstates[i]['data_skanowania'] = scanned_data[i]
     return mergedEstates
 
 def createTable(mergedEstates, root):
